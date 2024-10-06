@@ -1,0 +1,5 @@
+<?php
+
+return [
+    'Profile' => 'プロフィール',
+];

@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.normal_container {
+    @apply my-3;
+}
+
+.select_container {
+    @apply my-3;
+}
