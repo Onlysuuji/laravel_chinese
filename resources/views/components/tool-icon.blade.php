@@ -1,4 +1,4 @@
-@props(['icon', 'color' => 'white', 'tootip'])
+@props(['icon', 'color' => 'white', 'tooltip'])
 
 
 @php
