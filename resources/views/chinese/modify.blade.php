@@ -1,18 +1,7 @@
-<!DOCTYPE html>
-<html lang="ja">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>単語を編集</title>
-
-
-</head>
-
-@include('uptab')
-
-<body>
+<x-test2-layout>
+    <x-slot name="title">
+        単語の編集
+    </x-slot>
     <h1>単語を編集・修正する</h1>
     @if ($question_type === 'normal' || $question_type === 'j_to_c')
         <input type="text" class="question" id="question" placeholder="日本語を入力" value="{{ $question }}">
@@ -294,9 +283,4 @@
 
         }
     </script>
-
-</body>
-
-
-
-</html>
+</x-test2-layout>

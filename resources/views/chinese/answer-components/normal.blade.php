@@ -1,21 +1,20 @@
-<div class>
+<div class="flex flex-col gap-y-10">
+    <div class="text-center py-2 text-2xl space-y-5">
+        <p class="w-full text-2xl bg-gray-100 rounded">読み方を答えよ</p>
+        <p>{{ $question }}</p>
+    </div>
+    <div class="space-y-5 flex flex-col items-center">
+        <p class="w-full text-2xl bg-gray-100 rounded">あなたの答え </p>
+        <div id="userAnswer" class="w-5/6 rounded text-xl"></div>
+    </div>
+    <div class="space-y-5 flex flex-col items-center">
+        <p class="w-full text-2xl bg-gray-100 rounded">問題の答え</p>
+        <div id="solution_containers" class="w-5/6 rounded"></div>
+    </div>
 
 </div>
 
 
-
-
-
-
-
-<h3>あなたの答え</h3>
-
-<!-- あなたの回答 -->
-<div id="userAnswer" class="userAnswer"></div>
-
-<h3>問題の答え</h3>
-
-<div id="solution_containers"></div>
 <script type="module">
     import {
         mergeSishengPinyin
@@ -28,7 +27,7 @@
     for (let i = 0; i < count; i++) {
         const container = document.getElementById('solution_containers');
         const newDiv = document.createElement('div');
-        newDiv.className = 'flex bg-green-200 my-3 justify-around rounded p-1';
+        newDiv.className = 'flex my-3 justify-around rounded text-xl';
         newDiv.innerHTML = `
                         <lavel>${i+1} : </lavel>
                         <div class="solution_sishengpinyin">${mergeSishengPinyin(aa.sisheng[i],aa.pinyin[i])}</div>
@@ -40,4 +39,3 @@
     document.getElementById('userAnswer').textContent = mergeSishengPinyin("{!! $yoursisheng !!}",
         "{{ $yourpinyin }}");
 </script>
-<script type="module"></script>

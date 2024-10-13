@@ -19,11 +19,12 @@ class ChineseSeeder extends Seeder
             [
                 'user_id' => 1,
                 'question' => '私',
+                'question_type' => 'normal',
                 'answer' => json_encode([
                     'sisheng' => ['3', '3'],
                     'pinyin' => ['wo', 'ni'],
                     'kantaiji' => ['我','你'],
-                ])
+                ]),
             ],
         ]);
     }
