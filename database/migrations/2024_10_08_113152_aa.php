@@ -14,9 +14,10 @@ return new class extends Migration
     public function up()
     {
         Schema::table('chineses', function (Blueprint $table) {
-            $table->json('answer')->nullable();
             $table->json('choices')->nullable();
+            $table->integer('thinkingtime')->nullable();
             $table->string('question_answer',100);
+            $table->string('question_type',100);
         });
     }
 
