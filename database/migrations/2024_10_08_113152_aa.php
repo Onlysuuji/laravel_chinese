@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::table('chineses', function (Blueprint $table) {
             $table->json('choices')->nullable();
             $table->integer('thinkingtime')->nullable();
-            $table->string('question_answer',100);
+            $table->string('question_answer',100)->default(Null);
             $table->string('question_type',100);
         });
     }

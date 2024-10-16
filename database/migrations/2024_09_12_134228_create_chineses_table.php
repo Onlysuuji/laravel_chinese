@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id(); // これは auto_increment になります
             $table->timestamps();
             $table->timestamp('nextreview_at')->useCurrent(); // デフォルトで現在のタイムスタンプ
-            $table->integer('rank'); // ここには auto_increment を指定しない
+            $table->integer('rank')->default(0);
             $table->string('question', 100);
             $table->longText('answer')->nullable(); // longtext型
             $table->json('additional_data')->nullable(); // json型
