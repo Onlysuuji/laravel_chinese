@@ -1,60 +1,4 @@
-<script>
-    function test() {
-
-
-        return {
-            addNormal() {
-                const container = document.getElementById('normal_containers');
-                const newDiv = document.createElement('div');
-                newDiv.className = 'normal_container';
-
-                newDiv.innerHTML = `
-                    <span class="sisheng_pinyin"></span>
-                    <input id="sisheng" type="number" class="sisheng" placeholder="四声を入力">
-                    <input id="pinyin" type="text" class="pinyin" placeholder="ピンインを入力">
-                    <input type="text" class="kantaiji" placeholder="簡体字を入力">
-                    <button class="bg-red-100 text-red-500 px-7 py-3 mx-5 rounded" @click="removeNormal($event)">削除</button>
-                    <div class="error-sisheng"></div>
-                    <div class="error-pinyin"></div>
-                    <div class="error-kantaiji"></div>
-                `;
-                container.appendChild(newDiv);
-            },
-            removeNormal(event) {
-                const element = event.target; // クリックされたボタンのターゲット
-                element.parentNode.remove(); // 親要素（div.normal_container）を削除
-            }
-        }
-    }
-</script>
-<script type="module">
-    import {
-        mergeSishengPinyin
-    } from './onlysuuji.js';
-
-    function updateContent() {
-        const containers = document.querySelectorAll('.normal_container');
-        containers.forEach(container => {
-            console.log(container);
-
-            container.querySelector('input.sisheng').addEventListener('input', () => {
-                container.querySelector('span.sisheng_pinyin').textContent = mergeSishengPinyin(
-                    container.querySelector('input.sisheng').value, container.querySelector(
-                        'input.pinyin')
-
-                    .value);
-            });
-            container.querySelector('input.pinyin').addEventListener('input', () => {
-                container.querySelector('span.sisheng_pinyin').textContent = mergeSishengPinyin(
-                    container.querySelector('input.sisheng').value, container.querySelector(
-                        'input.pinyin')
-                    .value);
-            });
-        })
-    }
-</script>
-
-<div id="normal" x-data="test()" x-init="addNormal()">
+<div id="normal">
 
     <div class="flex justify-center text-lg">
         日本語から中国語
@@ -71,17 +15,16 @@
     </div>
 
     <div id="add_button" class="flex items-center justify-center">
-        <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" id="addNormal"
-            @click="addNormal(); updateContent()">別解を追加</button>
-        <button class="bg-green-100 text-green-500 px-7 py-3 mx-5 rounded" id="sendNormal" name="sendNormal"
-            @click="saveNormal">登録する</button>
+        <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" id="addNormal">別解を追加</button>
+        <button class="bg-green-100 text-green-500 px-7 py-3 mx-5 rounded" id="sendNormal"
+            name="sendNormal">登録する</button>
         <div class="error-radio"></div>
     </div>
 
 </div>
 
 
-<!-- <script>
+<script>
     function addNormal() {
         const container = document.getElementById('normal_containers');
         const newDiv = document.createElement('div');
@@ -207,13 +150,22 @@
                 .then(formData => {
                     // すべての input フィールドを取得
                     const inputs = document.querySelectorAll('input');
+const spans = document.querySelectorAll('span');
 
-                    // それぞれの input フィールドの value を空にする
-                    inputs.forEach(input => {
-                        if (input.type !== 'radio' && input.type !== 'checkbox') {
-                            input.value = ''; // valueを空にする
-                        }
-                    });
+// それぞれの input フィールドの value を空にする
+inputs.forEach(input => {
+    if (input.type !== 'radio' && input.type !== 'checkbox') {
+        input.value = ''; // inputのvalueを空にする
+    }
+});
+
+// クラス名が "sisheng_pinyin" の span 要素のテキスト内容を空にする
+spans.forEach(span => {
+    if (span.classList.contains('sisheng_pinyin')) {
+        span.textContent = ''; // spanのテキストを空にする
+    }
+});
+
 
                 })
                 .catch(error => {
@@ -222,29 +174,43 @@
         }
     }
 </script>
-    <script type="module">
-        import {
-            mergeSishengPinyin
-        } from '/onlysuuji.js';
-        // コンテナ内の要素を更新する関数
-        function updateContent() {
-            const containers = document.querySelectorAll('.normal_container');
-            containers.forEach(container => {
-                console.log(container);
+<script type="module">
+    import {
+        mergeSishengPinyin
+    } from '/laravel_chinese/public/onlysuuji.js';
+    // コンテナ内の要素を更新する関数
+    function updateContent() {
+        const containers = document.querySelectorAll('.normal_container');
+        containers.forEach(container => {
+            console.log(container);
 
-                container.querySelector('input.sisheng').addEventListener('input', () => {
-                    container.querySelector('span.sisheng_pinyin').textContent = mergeSishengPinyin(
-                        container.querySelector('input.sisheng').value, container.querySelector(
-                            'input.pinyin')
+            container.querySelector('input.sisheng').addEventListener('input', () => {
+                container.querySelector('span.sisheng_pinyin').textContent = mergeSishengPinyin(
+                    container.querySelector('input.sisheng').value, container.querySelector(
+                        'input.pinyin')
 
-                        .value);
-                });
-                container.querySelector('input.pinyin').addEventListener('input', () => {
-                    container.querySelector('span.sisheng_pinyin').textContent = mergeSishengPinyin(
-                        container.querySelector('input.sisheng').value, container.querySelector(
-                            'input.pinyin')
-                        .value);
-                });
-            })
-        }
-    </script> -->
+                    .value);
+            });
+            container.querySelector('input.pinyin').addEventListener('input', () => {
+                container.querySelector('span.sisheng_pinyin').textContent = mergeSishengPinyin(
+                    container.querySelector('input.sisheng').value, container.querySelector(
+                        'input.pinyin')
+                    .value);
+            });
+        })
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        $("#addNormal").click(function() {
+            addNormal(); // まず、addNormal関数を実行
+            updateContent(); // 次に、updateContent関数を実行
+        });
+
+        $("#sendNormal").click(function() {
+            saveNormal();
+            updateContent(); // 次に、updateContent関数を実行
+        })
+
+        addNormal();
+        updateContent();
+    });
+</script>
