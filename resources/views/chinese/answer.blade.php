@@ -4,7 +4,7 @@
     </x-slot>
     <!-- 問題文 -->
     <div class="flex justify-center py-3">
-        <div class="w-80 space-y-5 text-center flex flex-col">
+        <div class="w-80 text-center flex flex-col">
             @if ($isCorrect == true)
                 <div
                     class="py-5 w-[100%] text-green-600 font-semibold text-3xl rounded outline outline-3 outline-gray-200 text-center">
