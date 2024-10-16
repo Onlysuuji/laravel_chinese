@@ -1,13 +1,13 @@
-<div class="flex flex-col">
-    <div class="text-center py-2 text-2xl">
+<div class="flex flex-col space-y-5">
+    <div class="text-center py-2 text-2xl space-y-5">
         <p class="w-full text-2xl bg-gray-100 rounded">読み方を答えよ</p>
         <p>{{ $question }}</p>
     </div>
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col items-center space-y-5">
         <p class="w-full text-2xl bg-gray-100 rounded my-2">あなたの答え </p>
         <div id="userAnswer" class="w-5/6 rounded text-xl my-3"></div>
     </div>
-    <div class="flex flex-col items-center">
+    <div class="flex flex-col items-center space-y-5">
         <p class="w-full text-2xl bg-gray-100 rounded">問題の答え</p>
         <div id="solution_containers" class="w-5/6 rounded"></div>
     </div>
@@ -18,7 +18,7 @@
 <script type="module">
     import {
         mergeSishengPinyin
-    } from "/laravel_chinese/public/onlysuuji.js";
+    } from "/onlysuuji.js";
     const aa = {!! $answer !!};
 
     // sisheng の要素数を数える

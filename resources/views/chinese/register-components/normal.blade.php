@@ -150,21 +150,21 @@
                 .then(formData => {
                     // すべての input フィールドを取得
                     const inputs = document.querySelectorAll('input');
-const spans = document.querySelectorAll('span');
+                    const spans = document.querySelectorAll('span');
 
-// それぞれの input フィールドの value を空にする
-inputs.forEach(input => {
-    if (input.type !== 'radio' && input.type !== 'checkbox') {
-        input.value = ''; // inputのvalueを空にする
-    }
-});
+                    // それぞれの input フィールドの value を空にする
+                    inputs.forEach(input => {
+                        if (input.type !== 'radio' && input.type !== 'checkbox') {
+                            input.value = ''; // inputのvalueを空にする
+                        }
+                    });
 
-// クラス名が "sisheng_pinyin" の span 要素のテキスト内容を空にする
-spans.forEach(span => {
-    if (span.classList.contains('sisheng_pinyin')) {
-        span.textContent = ''; // spanのテキストを空にする
-    }
-});
+                    // クラス名が "sisheng_pinyin" の span 要素のテキスト内容を空にする
+                    spans.forEach(span => {
+                        if (span.classList.contains('sisheng_pinyin')) {
+                            span.textContent = ''; // spanのテキストを空にする
+                        }
+                    });
 
 
                 })
@@ -177,7 +177,7 @@ spans.forEach(span => {
 <script type="module">
     import {
         mergeSishengPinyin
-    } from '/laravel_chinese/public/onlysuuji.js';
+    } from '/onlysuuji.js';
     // コンテナ内の要素を更新する関数
     function updateContent() {
         const containers = document.querySelectorAll('.normal_container');
