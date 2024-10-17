@@ -3,6 +3,9 @@
     <x-slot name="title">
         単語
     </x-slot>
+    <x-slot name="language">
+        chinese
+    </x-slot>
 
     @if ($question_type == 'j_to_c' || $question_type == 'normal')
         @include('chinese.chinese-components.chinese-normal')

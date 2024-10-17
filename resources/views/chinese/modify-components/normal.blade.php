@@ -7,7 +7,7 @@
     <div id="add_button" class="flex items-center justify-center">
         <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" id="addNormal">別解を追加</button>
         <button class="bg-green-100 text-green-500 px-7 py-3 mx-5 rounded" id="sendNormal"
-            name="sendNormal">登録する</button>
+            name="sendNormal">編集する</button>
         <div class="error-radio"></div>
     </div>
 </div>
@@ -104,10 +104,9 @@
         const jsonOutput = JSON.stringify(data);
         console.log(jsonOutput);
         if (allow) {
-            console.log("a")
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
             const formData = new FormData();
+            formData.append('id', @json($id));
             formData.append('answer', JSON.stringify(data));
             formData.append('question', question);
             formData.append('question_type', 'normal');
@@ -115,12 +114,12 @@
                 console.log(`${key}: ${value}`);
             });
 
-            fetch('{{ route('chinese.registerToDB') }}', {
+            fetch('{{ route('chinese.modifyWord') }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken // CSRFトークンをヘッダーに追加
                     },
-                    body: formData
+                    body: formData,
                 })
                 .then(response => {
                     if (!response.ok) {
@@ -129,28 +128,14 @@
                             throw new Error(text);
                         });
                     }
+                    const redirectUrl = response.headers.get('X-Redirect-URL');
+                    if (redirectUrl) {
+                        window.location.href = redirectUrl; // URLにリダイレクト
+                    }
                     return response.json(); // JSONでレスポンスをパース
                 })
-                .then(formData => {
-                    // すべての input フィールドを取得
-                    const inputs = document.querySelectorAll('input');
-                    const spans = document.querySelectorAll('span');
-
-                    // それぞれの input フィールドの value を空にする
-                    inputs.forEach(input => {
-                        if (input.type !== 'radio' && input.type !== 'checkbox') {
-                            input.value = ''; // inputのvalueを空にする
-                        }
-                    });
-
-                    // クラス名が "sisheng_pinyin" の span 要素のテキスト内容を空にする
-                    spans.forEach(span => {
-                        if (span.classList.contains('sisheng_pinyin')) {
-                            span.textContent = ''; // spanのテキストを空にする
-                        }
-                    });
-
-
+                .then(data => {
+                    console.log('リクエストの内容:', data); // リクエスト内容をコンソールに表示
                 })
                 .catch(error => {
                     console.error('エラー:', error); // エラーをコンソールに表示

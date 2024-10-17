@@ -41,7 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/register_word', [RegisterController::class, 'register'])->name('chinese.register');
     Route::post('/register_word', [RegisterController::class, 'registerToDB'])->name('chinese.registerToDB');
     Route::get('/modify', [ModifyController::class, 'modify'])->name('chinese.modify');
-    Route::patch('/modify', [ModifyController::class, 'modifyWord'])->name('chinese.modifyWord');
+    Route::post('/modify', [ModifyController::class, 'modifyWord'])->name('chinese.modifyWord');
     Route::get('/wordlist', [WordListController::class, 'wordlist'])->name('chinese.wordlist');
     Route::get('/test2', [TestController::class, 'test2'])->name('chinese.test2');
     

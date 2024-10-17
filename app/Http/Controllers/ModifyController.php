@@ -36,31 +36,28 @@ class ModifyController extends Controller
     public function modifyWord(Request $request)
     {
         try {
-            $data = $request->json()->all();
-
             $userId = Auth::id();
-            $id = $data['id'];
-            $word = Chinese::where('id', $id)
+            $word = Chinese::where('id', $request->input('id'))
                 ->where('user_id', $userId)
-                ->firstOrFail(); // 存在しない場合は例外をスロー
+                ->firstOrFail();
 
             $question_type = $word->question_type;
 
             // データの更新
             if ($question_type === 'normal') {
-                $word->answer = $data['answer'];
-                $word->question = $data['question'];
+                $word->answer = $request->input('answer');
+                $word->question = $request->input('question');
             } elseif ($question_type === 'select') {
-                $word->question = $data['question'];
-                $word->choices = $data['choices'];
-                $word->question_answer = $data['question_answer'];
+                $word->question = $request->input('question');
+                $word->choices = $request->input('choices');
+                $word->question_answer = $request->input('question_answer');
             }
 
             // 更新を保存
             $word->save();
 
             $response = response()->json([
-                'input' => $data, // リクエストデータを返す
+                'input' => $request->input(), // リクエストデータを返す
                 'status' => 'success'
             ]);
 
@@ -78,7 +75,7 @@ class ModifyController extends Controller
             return $response;
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // レコードが見つからない場合のエラー処理
-            return response()->json(['error' => 'no data found '], 404);
+            return response()->json(['error' => 'no data found for userId ' . $userId. '  id = ' . $request->input('id')], 404);
         } catch (\Illuminate\Database\QueryException $e) {
             // データベースクエリエラーの処理
             return response()->json(['error' => 'データベースエラー: ' . $e->getMessage()], 500);
