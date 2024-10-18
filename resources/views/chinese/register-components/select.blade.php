@@ -1,4 +1,4 @@
-<div id="select">
+<div id="select" >
     <div class="flex justify-center text-lg">
         選択問題
     </div>
@@ -6,7 +6,23 @@
         <input type="text" class="my-3" id="question_select" placeholder="問題を入力">
     </div>
     <div id="error-question"></div>
-    <div id="select_containers" class = "my-5"></div>
+
+    
+    <div class="flex justify-center text-lg">
+        答えの選択肢を入力
+    </div>
+
+    <div id="question_answer" class="mb-6 mt-2 flex justify-center">
+
+        <input type="text" id="option" class="select" placeholder="答えの選択肢を入力">
+        <div class="error-select"></div>
+    </div>
+
+    <div class="flex justify-center text-lg">
+        間違いの答えの選択肢を入力
+    </div>
+
+    <div id="select_containers" class = "mt-2"></div>
 
     <div id="add_button" class="flex items-center justify-center">
         <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" onclick="addSelect()">追加</button>
@@ -28,11 +44,7 @@
             const newDiv = document.createElement('div');
             newDiv.className = 'select_container';
             newDiv.innerHTML = `
-            <label class="ms-2 text-sm font-xl text-gray-900 dark:text-gray-300">答えの選択肢を選んでください</label>
-            <input id="default-radio" type="radio" value="" name="default-radio" class="radio">
-
             <input type="text" id="option" class="select" placeholder="選択肢を入力">
-            <input type="text" class="select_comment" placeholder="選択肢の解説を入力">
             <button class="bg-red-100 text-red-500 px-7 py-3 mx-5 rounded" onclick="removeSelect(this)">削除</button>
             <div class="error-select"></div>
         `;

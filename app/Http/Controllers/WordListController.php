@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class WordListController extends Controller
 {
-    public function wordlist(Request $request)
+    public function wordlist()
     {
         // データを20件ずつ取得する
 

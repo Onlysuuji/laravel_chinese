@@ -8,20 +8,37 @@
                 <div>
                     日本語から中国語
                 </div>
+                @php
+                    // answerをデコードして配列に変換
+                    $decodedAnswer = json_decode($item->answer, true);
+                @endphp
                 <div>
-                    @php
-                        // answerをデコードして配列に変換
-                        $decodedAnswer = json_decode($item->answer, true);
-                    @endphp
+                    問題: {{$item->question}}
+                </div>
+                <div class="flex gap-x-3 items-center">
+                    
+                    <div>
+                        @foreach ($decodedAnswer['sisheng'] as $index => $sisheng)
+                            <div>
+                                <!-- sisheng, pinyin, kantaijiの各値を順に出力 -->
+                                Sisheng: {{ $sisheng }}&nbsp;&nbsp; &nbsp;
+                                Pinyin: {{ $decodedAnswer['pinyin'][$index] }}&nbsp;&nbsp;&nbsp;
+                                簡体字: {{ $decodedAnswer['kantaiji'][$index] }}
 
-                    @foreach ($decodedAnswer['sisheng'] as $index => $sisheng)
-                        <div>
-                            <!-- sisheng, pinyin, kantaijiの各値を順に出力 -->
-                            Sisheng: {{ $sisheng }}&nbsp;&nbsp; &nbsp;
-                            Pinyin: {{ $decodedAnswer['pinyin'][$index] }}&nbsp;&nbsp;&nbsp;
-                            簡体字: {{ $decodedAnswer['kantaiji'][$index] }}
-                        </div>
-                    @endforeach
+                            </div>
+                        @endforeach
+                    </div>
+                    <div class="flex space-x-4">
+                        <a href="{{ route('chinese.modify', ['id' => $item->id]) }}"
+                            class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded" type="submit">編集する</a>
+                        <form action="{{ route('chinese.destroy', $item->id) }}" method="POST"
+                            onsubmit="return confirm('本当に削除しますか？');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                class="p-3 flex items-center bg-red-100 hover:bg-red-300 rounded">削除</button>
+                        </form>
+                    </div>
                 </div>
                 ------------------------------------------------
             @endif
@@ -29,36 +46,5 @@
     </div>
 
     <!-- ページネーションリンクの表示 -->
-    <div>
-        @if ($items->hasPages())
-            <nav role="navigation" aria-label="Pagination Navigation" class="flex justify-between">
-                {{-- Previous Page Link --}}
-                @if ($items->onFirstPage())
-                    <span
-                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">
-                        {!! __('pagination.previous') !!}
-                    </span>
-                @else
-                    <a href="{{ $items->previousPageUrl() }}"
-                        class="relative inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
-                        {!! __('pagination.previous') !!}
-                    </a>
-                @endif
-
-                {{-- Next Page Link --}}
-                @if ($items->hasMorePages())
-                    <a href="{{ $items->nextPageUrl() }}"
-                        class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 leading-5 rounded-md hover:text-gray-500 focus:outline-none focus:ring ring-gray-300 focus:border-blue-300 active:bg-gray-100 active:text-gray-700 transition ease-in-out duration-150">
-                        {!! __('pagination.next') !!}
-                    </a>
-                @else
-                    <span
-                        class="relative inline-flex items-center px-4 py-2 ml-3 text-sm font-medium text-gray-500 bg-white border border-gray-300 cursor-default leading-5 rounded-md">
-                        {!! __('pagination.next') !!}
-                    </span>
-                @endif
-            </nav>
-        @endif
-
-    </div>
+    {{ $items->links() }}
 </x-test2-layout>

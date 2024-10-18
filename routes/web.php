@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChineseController;
 use App\Http\Controllers\AnswerController;
+use App\Http\Controllers\DeleteController;
 use App\Http\Controllers\ModifyController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TestController;
@@ -44,6 +45,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/modify', [ModifyController::class, 'modifyWord'])->name('chinese.modifyWord');
     Route::get('/wordlist', [WordListController::class, 'wordlist'])->name('chinese.wordlist');
     Route::get('/test2', [TestController::class, 'test2'])->name('chinese.test2');
+    Route::delete('/delete/{id}', [DeleteController::class, 'destroy'])->name('chinese.destroy');
     
     
 

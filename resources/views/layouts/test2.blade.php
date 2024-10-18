@@ -42,6 +42,17 @@
                                 </button>
                             </x-slot>
                             <x-slot name="content">
+                                <x-dropdown-link :href="route('chinese')">
+                                    <div class="flex flex-row items-center">
+                                        <div class='mr-2 w-9 h-9 flex items-center justify-center'>
+                                            <i class="fas fa-pencil-alt"></i>
+
+                                        </div>  
+                                        <div class=' overflow-hidden text-ellipsis whitespace-nowrap '>
+                                            単語の勉強
+                                        </div>
+                                    </div>
+                                </x-dropdown-link>
                                 <x-dropdown-link :href="route('chinese.register')">
                                     <div class="flex flex-row items-center">
                                         <div class='mr-2 w-9 h-9 flex items-center justify-center'>

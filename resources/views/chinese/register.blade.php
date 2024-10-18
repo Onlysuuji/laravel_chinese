@@ -15,11 +15,11 @@
                 <span class="text-sm">選択問題</span>
             </button>
         </div>
-        <div class=" mt-10 ring-4 ring-gray-200 rounded-lg p-3 pb-8">
-            <div x-show="selectedOption === 'normal'" class="block">
+        <div class=" mt-10 ring-4 ring-gray-200 rounded-lg p-3 pb-8 w-8/12">
+            <div x-show="selectedOption === 'normal'" class="flex justify-center">
                 @include('chinese.register-components.normal')
             </div>
-            <div x-show="selectedOption === 'select'" class="block">
+            <div x-show="selectedOption === 'select'" class="flex justify-center">
                 @include('chinese.register-components.select')
             </div>
         </div>
