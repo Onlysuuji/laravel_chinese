@@ -1,32 +1,38 @@
-<div id="select" >
-    <div class="flex justify-center text-lg">
-        選択問題
-    </div>
-    <div class="flex justify-center rounded-lg">
-        <input type="text" class="my-3" id="question_select" placeholder="問題を入力">
-    </div>
-    <div id="error-question"></div>
-
-    
-    <div class="flex justify-center text-lg">
-        答えの選択肢を入力
+<div id="select" class="flex flex-col gap-y-10 w-11/12">
+    <div class="block sm:flex items-center text-lg">
+        <label for="question_select" class="w-1/3">選択問題:</label> <!-- ラベルを使用 -->
+        <input type="text" class="sm:w-2/3 rounded" id="question_select" placeholder="問題を入力">
     </div>
 
-    <div id="question_answer" class="mb-6 mt-2 flex justify-center">
 
-        <input type="text" id="option" class="select" placeholder="答えの選択肢を入力">
+    <div class="block sm:flex items-center text-lg">
+        <div class="sm:w-1/3">答えの選択肢を入力:</div>
+
+        <input type="text" id="answer" class="flex-1 rounded" placeholder="答えの選択肢を入力">
         <div class="error-select"></div>
     </div>
 
-    <div class="flex justify-center text-lg">
-        間違いの答えの選択肢を入力
+    <div class="block sm:flex justify-center text-lg ">
+        <div class="sm:w-1/3 flex sm:flex-col gap-y-5 mt-5">
+            間違いの選択肢を入力:
+            <div class="flex justify-center">
+                <button class="relative bg-blue-100 text-blue-500 rounded px-5 py-2 hover:bg-blue-200" onclick="addSelect()">追加</button>
+            </div>
+
+        </div>
+        <div id="select_containers" class = "w-2/3"></div>
+
     </div>
 
-    <div id="select_containers" class = "mt-2"></div>
+
+    <div id="comment_container" class="block sm:flex justify-center items-center text-lg">
+        <p class="sm:w-1/3">解説を入れる(任意)</p>
+
+        <input type="text" class="flex-1 rounded" id="comment" placeholder="解説を入れる">
+    </div>
 
     <div id="add_button" class="flex items-center justify-center">
-        <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" onclick="addSelect()">追加</button>
-        <button class="bg-green-100 text-green-500 px-7 py-3 mx-5 rounded" id="sendSelect" name="sendSelect"
+        <button class="bg-green-100 text-green-500 px-7 py-3 mx-5 rounded hover:bg-green-200" id="sendSelect" name="sendSelect"
             onclick="saveSelect()">登録する</button>
         <div class="error-radio"></div>
 
@@ -42,18 +48,17 @@
         function addSelect() {
             const container = document.getElementById('select_containers');
             const newDiv = document.createElement('div');
-            newDiv.className = 'select_container';
+            newDiv.className = 'select_container flex justify-between items-center ';
             newDiv.innerHTML = `
-            <input type="text" id="option" class="select" placeholder="選択肢を入力">
-            <button class="bg-red-100 text-red-500 px-7 py-3 mx-5 rounded" onclick="removeSelect(this)">削除</button>
-            <div class="error-select"></div>
+            <input type="text" id="option" class="select" style="flex-grow: 1; border-radius: 0.25rem; margin-right: 1rem;" placeholder="選択肢を入力">
+            <button class="bg-red-100 text-red-500 px-7 py-2 rounded hover:bg-red-200" onclick="removeSelect(this)">削除</button>
         `;
             container.appendChild(newDiv);
         }
 
         function removeSelect(element) {
             const container = document.getElementById('select_containers');
-            if (container.children.length > 2) {
+            if (container.children.length > 1) {
                 container.removeChild(element.parentElement);
             } else {
                 alert('これ以上減らすことはできません');
@@ -65,34 +70,17 @@
             const question_type = 'select';
             let allow = true;
 
-            const containers = document.querySelectorAll('.select_container');
+            const containers = document.querySelectorAll('[class*="select_container"]');
             const question = document.getElementById('question_select').value;
-            const selectedRadio = document.querySelector('.radio:checked');
-            let answer = '';
-            if (selectedRadio) {
-                const container = selectedRadio.closest('.select_container');
-                if (container) {
-                    const selectInput = container.querySelector('.select');
-                    if (selectInput) {
-                        answer = selectInput.value;
-                        document.getElementById('error-question').textContent = "";
-                        console.log('選択肢の値:', answer);
-                    } else {
-                        console.error('クラス "select" の要素が見つかりません');
-                    }
-                } else {
-                    console.error('クラス "select_container" の要素が見つかりません');
-                }
-            } else {
-                console.log("b");
+            const comment = document.getElementById('comment').value ?? null;
 
-                document.getElementById('error-question').textContent = "答えを選択してください";
+            const answer = document.getElementById('answer').value;
+            if (!answer) {
+                console.error('クラス "select_container" の要素が見つかりません');
                 allow = false;
-            }
-
+            } 
             const data = {
-                option: [],
-                comment: []
+                option: []
             };
             if (question == "") {
                 document.getElementById('error-question').textContent = "問題を入力してください";
@@ -106,20 +94,13 @@
             containers.forEach(container => {
                 // sishengクラスとpinyinクラスを持つinputを取得
                 const select = container.querySelector('input.select').value;
-                const comment = container.querySelector('input.select_comment').value;
 
                 if (select == "") {
                     container.querySelector('div.error-select').textContent = "選択肢を入力してください  ";
                     allow = false;
-                } else {
-                    container.querySelector('div.error-select').textContent = "";
-                }
-
-
+                } else {}
                 // それぞれの値をdataオブジェクトに追加
                 data.option.push(select);
-                data.comment.push(comment);
-
             });
 
             const jsonOutput = JSON.stringify(data);
@@ -133,6 +114,7 @@
                 formData.append('choices', JSON.stringify(data));
                 formData.append('question_type', question_type);
                 formData.append('question_answer', answer);
+                formData.append('comment', comment);
 
                 formData.forEach((value, key) => {
                     console.log(`${key}: ${value}`);

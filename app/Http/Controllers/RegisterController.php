@@ -32,6 +32,7 @@ class RegisterController extends Controller
                 $add->choices = $request->input('choices');
                 $add->question_answer = $request->input('question_answer');
             }
+            $add->comment = $request->input('comment')??null;
 
             $add->save();
 

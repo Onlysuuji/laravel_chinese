@@ -2,6 +2,20 @@
 <html lang="en">
 
 <head>
+    <!-- 基本のfavicon -->
+    <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
+    <link rel="icon" href="{{ asset('favicon-16x16.png') }}" sizes="16x16" type="image/png">
+    <link rel="icon" href="{{ asset('favicon-32x32.png') }}" sizes="32x32" type="image/png">
+
+    <!-- Android用 -->
+    <link rel="icon" href="{{ asset('android-chrome-192x192.png') }}" sizes="192x192" type="image/png">
+    <link rel="icon" href="{{ asset('android-chrome-512x512.png') }}" sizes="512x512" type="image/png">
+
+    <!-- Apple用 -->
+    <link rel="apple-touch-icon" href="{{ asset('apple-touch-icon.png') }}">
+
+    <!-- Web Manifest -->
+    <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -13,6 +27,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.3/css/flag-icons.min.css">
 </head>
+
 <body>
     <div class="flex flex-col h-screen">
 
@@ -47,7 +62,7 @@
                                         <div class='mr-2 w-9 h-9 flex items-center justify-center'>
                                             <i class="fas fa-pencil-alt"></i>
 
-                                        </div>  
+                                        </div>
                                         <div class=' overflow-hidden text-ellipsis whitespace-nowrap '>
                                             単語の勉強
                                         </div>
@@ -57,7 +72,7 @@
                                     <div class="flex flex-row items-center">
                                         <div class='mr-2 w-9 h-9 flex items-center justify-center'>
                                             <i class="fas fa-plus"></i>
-                                        </div>  
+                                        </div>
                                         <div class=' overflow-hidden text-ellipsis whitespace-nowrap '>
                                             単語の追加
                                         </div>
@@ -174,10 +189,6 @@
                     class="flex flex-col items-center text-black">
                     <i class="fas fa-user text-2xl"></i>
                     <span class="overflow-hidden text-ellipsis whitespace-nowrap mt-1">{{ Auth::user()->name }}</span>
-                </a>
-                <a href="#" class="flex flex-col items-center text-black">
-                    <i class="fas fa-cog text-2xl"></i>
-                    <span class="mt-1">設定</span>
                 </a>
             </div>
 

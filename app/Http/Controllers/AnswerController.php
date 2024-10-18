@@ -28,11 +28,11 @@ class AnswerController extends Controller
 
                 if ($yoursisheng) {
                     $request->validate([
-                        'yoursisheng' => 'regex:/^[0-4]+$/',
-                        //'yourpinyin' => 'required'
+                        'yourpinyin' => ['required', 'regex:/^[^\d]*$/'],
+                        'yourpinyin' => 'required'
                     ], [
-                        // 'yoursisheng.required' => '必須項目です',  // 修正: キーの書き方
-                        //'yourpinyin.required' => '必須項目です',   // 修正: キーの書き方
+                         'yoursisheng.required' => '必須項目です',  // 修正: キーの書き方
+                        'yourpinyin.required' => '必須項目です',   // 修正: キーの書き方
                         'yoursisheng.regex' => '0から4の文字で構成されている必要があります。',
                     ]);
                 }else if(!$yourpinyin){
