@@ -52,7 +52,7 @@
                                         </div>
                                     </div>
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('chinese.wordlist')">
+                                <x-dropdown-link :href="route('chinese.wordlist', ['page' => 1])">
                                     <div class="flex flex-row items-center">
                                         <div class='mr-2 w-9 h-9 flex items-center justify-center'>
                                             <i class="fas fa-book"></i>
