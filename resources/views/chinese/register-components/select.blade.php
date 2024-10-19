@@ -26,7 +26,7 @@
 
 
     <div id="comment_container" class="block sm:flex justify-center items-center text-lg">
-        <p class="sm:w-1/3">解説を入れる(任意)</p>
+        <p class="sm:w-1/3">解説を入れる(任意):</p>
 
         <input type="text" class="flex-1 rounded" id="comment" placeholder="解説を入れる">
     </div>

@@ -1,34 +1,31 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/seedrandom/3.0.5/seedrandom.min.js"></script>
 
-<body>
 
 
 
-    <div class="w-64 h-auto">
-        <!-- 問題文 -->
-        <div
-            class="py-5 bg-green-200 w-[100%] mb-14 text-green-600 font-semibold text-3xl rounded outline outline-3 outline-gray-200">
-            {{ $question }}
-        </div>
-
-        <form id="myForm" method="post" action="{{ route('chinese.answer') }}">
-            @method('PATCH')
-            @csrf
-            <input type="hidden" id="id" name="id" value="{{ $id }}">
-            <input type="hidden" name="choices" value="{{ $choices }}">
-            <div id="select"></div>
-        </form>
+<div class="w-64 h-auto">
+    <!-- 問題文 -->
+    <div
+        class="">
+        {{ $word->question }}
     </div>
-</body>
+
+    <form id="myForm" method="post" action="{{ route('chinese.answer') }}">
+        @method('PATCH')
+        @csrf
+        <input type="hidden" id="id" name="id" value="{{ $word->id }}">
+        <div id="select"></div>
+    </form>
+</div>
 <script>
     // 配列をランダムに並び替える関数
     function shuffleArray(array) {
-        Math.seedrandom({{ $seed }});
+        Math.seedrandom({{ session('seed') }});
         return array.sort(() => Math.random() - 0.5);
     }
 
     // ページが完全に読み込まれたときに実行
-    const aa = {!! $choices !!};
+    const aa = {!! json_encode($choices) !!};
     shuffleArray(aa.option);
 
     // 'aa.selects' 配列の各要素に対して処理を行う
