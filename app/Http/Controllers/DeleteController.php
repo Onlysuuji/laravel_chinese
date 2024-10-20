@@ -15,6 +15,6 @@ class DeleteController extends Controller
         $item->delete();
 
         // 削除後にリダイレクト
-        return redirect()->route('chinese.wordlist')->with('success', 'データが削除されました。');
+        return redirect()->to(url()->previous())->with('success', 'データが削除されました。');
     }
 }

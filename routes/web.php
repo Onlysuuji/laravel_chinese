@@ -35,20 +35,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::get('/chinese', [ChineseController::class, 'showWord'])->name('chinese');
     Route::get('/english', [EnglishController::class, 'showWord'])->name('english');
-    Route::patch('/answer', [AnswerController::class, 'checkAnswer'])->name('chinese.answer');
-    Route::get('/answer', [AnswerController::class, 'showAnswer'])->name('chinese.showanswer');
-    Route::get('/register_word', [RegisterController::class, 'register'])->name('chinese.register');
-    Route::post('/register_word', [RegisterController::class, 'registerToDB'])->name('chinese.registerToDB');
-    Route::get('/modify', [ModifyController::class, 'modify'])->name('chinese.modify');
-    Route::post('/modify', [ModifyController::class, 'modifyWord'])->name('chinese.modifyWord');
-    Route::get('/wordlist', [WordListController::class, 'wordlist'])->name('chinese.wordlist');
-    Route::get('/test2', [TestController::class, 'test2'])->name('chinese.test2');
-    Route::delete('/delete/{id}', [DeleteController::class, 'destroy'])->name('chinese.destroy');
-    
-    
 
+
+    Route::get('/chinese', [ChineseController::class, 'showWord'])->name('chinese');
+    Route::prefix('chinese')->group(function () {
+        Route::patch('/answer', [AnswerController::class, 'checkAnswer'])->name('chinese.answer');
+        Route::get('/answer', [AnswerController::class, 'showAnswer'])->name('chinese.showanswer');
+        Route::get('/register_word', [RegisterController::class, 'register'])->name('chinese.register');
+        Route::post('/register_word', [RegisterController::class, 'registerToDB'])->name('chinese.registerToDB');
+        Route::get('/modify', [ModifyController::class, 'modify'])->name('chinese.modify');
+        Route::post('/modify', [ModifyController::class, 'modifyWord'])->name('chinese.modifyWord');
+        Route::get('/wordlist', [WordListController::class, 'wordlist'])->name('chinese.wordlist');
+        Route::delete('/delete/{id}', [DeleteController::class, 'destroy'])->name('chinese.destroy');
+    });
 });
 
 require __DIR__ . '/auth.php';
