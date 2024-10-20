@@ -23,11 +23,11 @@ class WordListController extends Controller
 
 
         // ユーザーIDに基づいて、指定された順序でデータを取得
-        $items = Chinese::where('user_id', Auth::id())
+        $words = Chinese::where('user_id', Auth::id())
             ->orderBy($sort, $order)
             ->paginate(20);
 
         // ビューにデータを渡す
-        return view('chinese.wordlist', compact('items', 'sort', 'order'));
+        return view('chinese.wordlist', compact('words', 'sort', 'order'));
     }
 }
