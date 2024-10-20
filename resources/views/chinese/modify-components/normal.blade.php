@@ -43,6 +43,13 @@
         }
     }
 
+    function checkNumber(number) {
+        const str = number.toString();
+
+        // すべての桁が0〜4の数字であるか確認
+        return [...str].every(char => char >= '0' && char <= '4');
+    }
+
     function saveNormal() {
         // 選択されたラジオボタンの値を取得
         const question_type = 'normal';

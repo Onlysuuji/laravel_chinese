@@ -22,16 +22,7 @@ class ModifyController extends Controller
         if (!$word) {
             Log::error('chinese.modify でエラー', ['user_id' => Auth::id(), 'time' => $request->query('id')]);
         }
-        $question_type = $word->question_type;
-        if ($question_type == 'normal') {
-            $question = $word->question;
-            $answer = $word->answer;
-            return view('chinese.modify', ['id' => $word->id, 'question' => $question, 'question_type' => $question_type, 'answer' => $answer]);
-        } elseif ($question_type == 'select') {
-            $choices = json_decode($word->choices, true);
-            $choices['option'][] = $word->question_answer;
-            return view('chinese.modify',compact('id', 'word', 'choices'));
-        }
+        return view('chinese.modify', compact('word'));
     }
     public function modifyWord(Request $request)
     {
@@ -52,6 +43,9 @@ class ModifyController extends Controller
                 $word->choices = $request->input('choices');
                 $word->question_answer = $request->input('question_answer');
             }
+            $word->comment = $request->input('comment');
+
+
 
             // 更新を保存
             $word->save();
@@ -75,7 +69,7 @@ class ModifyController extends Controller
             return $response;
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // レコードが見つからない場合のエラー処理
-            return response()->json(['error' => 'no data found for userId ' . $userId. '  id = ' . $request->input('id')], 404);
+            return response()->json(['error' => 'no data found for userId ' . $userId . '  id = ' . $request->input('id')], 404);
         } catch (\Illuminate\Database\QueryException $e) {
             // データベースクエリエラーの処理
             return response()->json(['error' => 'データベースエラー: ' . $e->getMessage()], 500);
