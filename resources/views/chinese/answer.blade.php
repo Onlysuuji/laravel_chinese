@@ -16,12 +16,12 @@
             @endif
 
             
-            @if ($question_type == 'j_to_c' || $question_type == 'normal')
+            @if ($word->question_type == 'j_to_c' || $word->question_type == 'normal')
                 @include('chinese.answer-components.normal')
-            @elseif ($question_type == 'select' && count($errors) === 0)
+            @elseif ($word->question_type == 'select')
                 @include('chinese.answer-components.select')
             @endif
-            <div class="flex items-center justify-around px-5">
+            <div class="flex items-center justify-around px-5 pt-5">
                 <a href="{{ route('chinese') }}" class=" p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
                 type="submit">次の単語</a>
                 <a href="{{ route('chinese.modify', ['id' => $id]) }}" class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"

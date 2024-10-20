@@ -28,10 +28,9 @@ class ModifyController extends Controller
             $answer = $word->answer;
             return view('chinese.modify', ['id' => $word->id, 'question' => $question, 'question_type' => $question_type, 'answer' => $answer]);
         } elseif ($question_type == 'select') {
-            $question = $word->question;
-            $choices = $word->choices;
-            $answer = $word->question_answer;
-            return view('chinese.modify', ['id' => $word->id, 'question' => $question, 'question_type' => $question_type, 'choices' => $choices, 'answer' => $answer]);
+            $choices = json_decode($word->choices, true);
+            $choices['option'][] = $word->question_answer;
+            return view('chinese.modify',compact('id', 'word', 'choices'));
         }
     }
     public function modifyWord(Request $request)

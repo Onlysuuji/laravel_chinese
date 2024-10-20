@@ -1,7 +1,7 @@
 <div class="flex flex-col space-y-5">
-    <div class="text-center py-2 text-2xl space-y-5">
+    <div class="text-center py-2 text-2xl space-y-7">
         <p class="w-full text-2xl bg-gray-100 rounded">読み方を答えよ</p>
-        <p>{{ $question }}</p>
+        <p>{{ $word->question }}</p>
     </div>
     <div class="flex flex-col items-center space-y-5">
         <p class="w-full text-2xl bg-gray-100 rounded my-2">あなたの答え </p>
@@ -19,7 +19,7 @@
     import {
         mergeSishengPinyin
     } from "/onlysuuji.js";
-    const aa = {!! $answer !!};
+    const aa = {!! $word->answer !!};
 
     // sisheng の要素数を数える
     const count = aa.sisheng.length;

@@ -31,11 +31,11 @@ class AnswerController extends Controller
                         'yourpinyin' => ['required', 'regex:/^[^\d]*$/'],
                         'yourpinyin' => 'required'
                     ], [
-                         'yoursisheng.required' => '必須項目です',  // 修正: キーの書き方
+                        'yoursisheng.required' => '必須項目です',  // 修正: キーの書き方
                         'yourpinyin.required' => '必須項目です',   // 修正: キーの書き方
                         'yoursisheng.regex' => '0から4の文字で構成されている必要があります。',
                     ]);
-                }else if(!$yourpinyin){
+                } else if (!$yourpinyin) {
                     $yourpinyin = '回答なし';
                 }
 
@@ -114,7 +114,7 @@ class AnswerController extends Controller
                     'thinkingTime' => $thinkingTime,
                 ]);
 
-                return redirect()->route('chinese.showanswer', ['id' => $word->id,  'isCorrect' => $isCorrect, 'seed' => $request->seed, 'your_answer' => $request->your_answer]);
+                return redirect()->route('chinese.showanswer', ['id' => $word->id,  'isCorrect' => $isCorrect, 'your_answer' => $request->your_answer]);
             }
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             // 404 Not Foundの例外をキャッチ
@@ -143,30 +143,18 @@ class AnswerController extends Controller
         if (!$word) {
             return redirect()->back()->withErrors(['error' => 'レコードが見つかりませんでした。']);
         }
+        $isCorrect = $request->query('isCorrect');
+
 
         if ($word->question_type == 'normal') {
-            // ビューに必要なデータを渡す
-            return view('chinese.answer', [
-                'id' => $id, // デフォルト値を0に設定
-                'answer' => $word->answer ?? [], // $word->answerが存在しない場合は空配列を返す
-                'isCorrect' => $request->query('isCorrect', 'false'),
-                'question' => $word->question ?? 'No question provided', // $word->questionが存在しない場合のデフォルトメッセージ
-                'question_type' => $word->question_type ?? 'Unknown', // $word->question_typeが存在しない場合のデフォルト値
-                'yoursisheng' => $request->query('yoursisheng', 'N/A'), // デフォルト値を'N/A'に設定
-                'yourpinyin' => $request->query('yourpinyin', 'N/A') // デフォルト値を'N/A'に設定
-            ]);
+            $yoursisheng = $request->query('yoursisheng', 'N/A'); // デフォルト値を'N/A'に設定
+            $yourpinyin = $request->query('yourpinyin', 'N/A'); // デフォルト値を'N/A'に設定
+            return view('chinese.answer', compact('id', 'word', 'yoursisheng', 'yourpinyin', 'isCorrect'));
         } elseif ($word->question_type == 'select') {
-            // ビューに必要なデータを渡す
-            return view('chinese.answer', [
-                'id' => $id, // デフォルト値を0に設定
-                'choices' => $word->choices,
-                'question_answer' => $word->question_answer ?? [], // $word->answerが存在しない場合は空配列を返す
-                'isCorrect' => $request->query('isCorrect', 'false'),
-                'question' => $word->question ?? 'No question provided', // $word->questionが存在しない場合のデフォルトメッセージ
-                'question_type' => $word->question_type ?? 'Unknown', // $word->question_typeが存在しない場合のデフォルト値
-                'seed' => session('seed') ?? 0,
-                'your_answer' => $request->query('your_answer'),
-            ]);
+            $your_answer = $request->query('your_answer', null);
+            $choices = json_decode($word->choices, true);
+            $choices['option'][] = $word->question_answer;
+            return view('chinese.answer', compact('id', 'choices', 'word', 'your_answer', 'isCorrect'));
         }
     }
 }
