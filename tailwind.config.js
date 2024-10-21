@@ -13,8 +13,12 @@ module.exports = {
             fontFamily: {
                 sans: ['Figtree', ...defaultTheme.fontFamily.sans],
             },
+            // ここで他のテーマの拡張も追加できます
         },
     },
 
-    plugins: [require('@tailwindcss/forms')],
+    plugins: [
+        require('@tailwindcss/forms'),
+        require('tailwindcss-textshadow'), // ここにtext-shadowのプラグインも追加
+    ],
 };

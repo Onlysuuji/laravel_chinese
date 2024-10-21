@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB; //追記
 
-class ChineseSeeder extends Seeder
+class ChineseNormal extends Seeder
 {
     /**
      * Run the database seeds.
