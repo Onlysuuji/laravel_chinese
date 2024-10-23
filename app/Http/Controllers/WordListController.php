@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Chinese;  // 必要に応じてモデルを指定
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use PHPUnit\TextUI\XmlConfiguration\CodeCoverage\Report\Php;
 
 class WordListController extends Controller
 {
@@ -22,12 +24,25 @@ class WordListController extends Controller
         }
 
 
-        // ユーザーIDに基づいて、指定された順序でデータを取得
-        $words = Chinese::where('user_id', Auth::id())
-            ->orderBy($sort, $order)
-            ->paginate(20);
+        $categories = $request->query('category', ['normal', 'select']);
 
-        // ビューにデータを渡す
-        return view('chinese.wordlist', compact('words', 'sort', 'order'));
+        $searchKeyword = $request->input('search', null); // 検索キーワード（リクエストから取得）
+
+        $words = Chinese::where('user_id', Auth::id())
+            ->whereIn('question_type', $categories)
+            ->when($searchKeyword, function ($query) use ($searchKeyword) {
+                // 検索キーワードがある場合、複数カラムで部分一致検索
+                return $query->where(function ($query) use ($searchKeyword) {
+                    $query->where('question', 'LIKE', "%{$searchKeyword}%")
+                        ->orWhere('answer', 'LIKE', "%{$searchKeyword}%")
+                        ->orWhere('choices', 'LIKE', "%{$searchKeyword}%")
+                        ->orWhere('comment', 'LIKE', "%{$searchKeyword}%");
+                });
+            })
+            ->orderBy($sort, $order)
+            ->paginate(20); // ページネーションで10件ずつ表示
+
+
+        return view('chinese.wordlist', compact('words','sort', 'order', 'searchKeyword'));
     }
 }

@@ -32,7 +32,7 @@
     <div class="flex flex-col h-screen">
 
         <nav
-            class='flex h-20 justify-between top-0 left-0 shadow-[0_0_64px_0_rgba(0,0,0,0.07)] border-b-4 border-gray-100'>
+            class='flex h-20 justify-between w-[755px] md:w-full top-0 left-0 shadow-[0_0_64px_0_rgba(0,0,0,0.07)] border-b-4 border-gray-100'>
             <div class="flex justify-between gap-10 items-center">
                 <div class="px-5">
                     <a href="chinese" class="flex flex-row items-center text-black">
