@@ -1,13 +1,13 @@
-@php
+{{-- @php
 // answerをデコードして配列に変換
 $decodedAnswer = json_decode($word->answer, true);
 @endphp
 
-<div class="flex text-center w-full py-2">
+<div class="flex text-center w-full py-1">
     <div class="w-1/12">
         日本語から中国語
     </div>
-    <div class="w-1/12">
+    <div class="w-2/12">
         {{ $word->question }}
     </div>
     <div class="w-4/12">
@@ -21,15 +21,15 @@ $decodedAnswer = json_decode($word->answer, true);
         </div>
         @endforeach
     </div>
-    <div class="w-2/12">
+    <div class="w-3/12">
         @if($word->comment)
         {{$word->comment}}
         @else
         コメントなし
         @endif
     </div>
-    <div class="w-1/12">
-        <div class="flex flex-col gap-x-2 items-center w-full">
+    <div class="w-2/12">
+        <div class="flex gap-x-2 items-center w-full">
             <a href="{{ route('chinese.modify', ['id' => $word->id]) }}"
                 class="w-20 p-2 flex items-center justify-center bg-orange-50 hover:bg-orange-100 rounded" type="submit">編集</a>
             <form action="{{ route('chinese.destroy', $word->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
@@ -39,9 +39,4 @@ $decodedAnswer = json_decode($word->answer, true);
             </form>
         </div>
     </div>
-    <div class="w-3/12">
-        <p>作成日: {{ $word->created_at }}&nbsp;&nbsp; &nbsp;</p>
-        <p>学習予定: {{ $word->nextreview_at }}&nbsp;&nbsp;&nbsp;</p>
-        <p>ランク: {{$word->rank}}</p>
-    </div>
-</div>
+</div> --}}

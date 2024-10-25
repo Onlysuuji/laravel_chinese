@@ -67,7 +67,7 @@
     
     </script>
 
-    <div class="flex flex-col justify-center items-center gap-y-6 my-4" x-data="getData()">
+    <div class="flex flex-col justify-center items-center gap-y-6 my-4 w-[755px] md:w-full" x-data="getData()">
         <div class="space-y-2">
             <div class="space-x-4 flex justify-center">
                 <div>
@@ -90,10 +90,13 @@
 
             </div>
             <div class="">
-                <input type="text" placeholder="検索する" class="rounded h-5 text-center" id="search"
-                    @input="data.searchKeyword = $event.target.value; saveData()"  value="{{ old('search', '') }}"/>
+                <!-- 検索ボックス -->
+                <input type="text" placeholder="検索" class="rounded h-5 text-center" id="search"
+                    x-model="data.searchKeyword" value="{{ $searchKeyword }}"
+                    @keydown.enter.prevent="saveData(); window.location.href = generateUrl()" />
 
-                <a :href="generateUrl()" class="px-4 py-2 text-white rounded text-shadow-md shadow">
+                <!-- 検索ボタン -->
+                <a @click="saveData()" :href="generateUrl()" class="px-4 py-2 text-white rounded text-shadow-md shadow">
                     検索
                 </a>
             </div>
@@ -137,14 +140,23 @@
     </div>
 
 
-    <div class="grip place-content-center md:flex md:justify-center">
+    <div class=" md:flex md:justify-center">
         <div class="px-10 w-[755px] md:w-[1200px]">
-            <div class="block md:w-full border-4 border-black ring-2 ring-black ring-offset-2 ring-offset-rose-800">
+            <div class="block md:w-full border-4 border-black ring-2 ring-black ring-offset-2 ring-offset-rose-800 text-sm">
                 @if(isset($words))
+                {{-- <div class="m-1 flex text-center">
+                    <div class="w-1/12">問題形式</div>
+                    <div class="w-2/12">問題</div>
+                    <div class="w-4/12">答え</div>
+                    <div class="w-3/12">コメント</div>
+                </div> --}}
+                
                 @foreach ($words as $word)
-                <div class="m-1 flex flex-col items-center gap-y-3 bg-yellow-200 rounded-2xl">
+                <div class="m-1 flex flex-col items-center bg-yellow-200 rounded">
                     @if ($word->question_type === 'normal')
                     @include('chinese.wordlist-components.normal')
+                    @elseif($word->question_type === 'select')
+                    @include('chinese.wordlist-components.select')
                     @endif
                 </div>
                 <div class="text-center">------------------------------------------------</div>

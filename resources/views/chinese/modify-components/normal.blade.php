@@ -1,6 +1,6 @@
 <div class="flex flex-col items-center space-y-5 mt-4">
     <p>通常問題</p>
-    <input type="text" class="question" id="question_normal" placeholder="日本語を入力" value="{{ $question }}">
+    <input type="text" class="question" id="question_normal" placeholder="日本語を入力" value="{{ $word->   question }}">
     <div id="error-question"></div>
 
     <div id="normal_containers"></div>
@@ -113,7 +113,7 @@
         if (allow) {
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             const formData = new FormData();
-            formData.append('id', @json($id));
+            formData.append('id', @json($word->id));
             formData.append('answer', JSON.stringify(data));
             formData.append('question', question);
             formData.append('question_type', 'normal');
@@ -177,7 +177,7 @@
     }
 
 
-    const old_answer = {!! $answer !!};
+    const old_answer = {!! $word->answer !!};
     console.log(old_answer);
     // sishengs の要素数を数える
     const count = old_answer.sisheng.length;
