@@ -76,8 +76,8 @@
 
                 <!-- ソートボタン 作成日 昇順 -->
                 <a @click=" categoryData('normal'); saveData()" :href="generateUrl()"
-                    class="px-4 py-1 text-white rounded text-shadow-md shadow text-xs"
-                    :class="data.category.includes('normal') ? 'bg-yellow-300' : 'bg-yellow-100 hover:bg-yellow-300'">
+                    class="px-4 py-1 rounded text-shadow-md shadow text-xs text-white"
+                    :class="data.category.includes('normal') ? 'bg-yellow-400 ' : 'bg-yellow-200 hover:bg-yellow-400'">
                     日→中
                 </a>
 

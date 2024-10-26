@@ -24,7 +24,7 @@ class WordListController extends Controller
         }
 
 
-        $categories = $request->query('category', ['normal', 'select']);
+        $categories = $request->query('category', []);
 
         $searchKeyword = $request->query('search', null); // 検索キーワード（リクエストから取得）
 

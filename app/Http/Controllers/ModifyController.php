@@ -7,14 +7,18 @@ use Illuminate\Http\Request;
 use App\Models\Chinese;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 
 class ModifyController extends Controller
 {
     public function modify(Request $request)
     {
 
-        if (url()->previous() !== url('/modify')) {
-            $request->session()->put('previous_url', url()->previous());
+        $previous = url()->previous();
+
+        // 前のURLが '/chinese/answer' で始まっている場合、'/chinese' に置き換え
+        if (Str::startsWith($previous, url('/chinese/answer'))) {
+            $previous = url('/chinese');
         }
 
         $userId = Auth::id();

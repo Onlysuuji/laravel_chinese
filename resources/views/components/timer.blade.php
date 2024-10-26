@@ -4,7 +4,7 @@
 
 
 <div x-data="timerData()" x-init="storageKey = 'タイマー{{$test}}_{{Auth::user()->id}}';timerNumber={{$test}}; init()" class="flex flex-row justify-between items-center gap-4 px-2 py-1">
-    <pre class="pt-1 font-bold h-10 w-40 flex items-center justify-center" x-text="formattedTime" x-show="remainingTime > 0">
+    <pre class="pt-1 font-bold h-10 w-40 flex items-center justify-center text-base" x-text="formattedTime" x-show="remainingTime > 0">
         00:00:00</pre>
 
     <!-- 時間設定用の入力フィールド -->
