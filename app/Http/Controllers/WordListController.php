@@ -26,7 +26,7 @@ class WordListController extends Controller
 
         $categories = $request->query('category', ['normal', 'select']);
 
-        $searchKeyword = $request->input('search', null); // 検索キーワード（リクエストから取得）
+        $searchKeyword = $request->query('search', null); // 検索キーワード（リクエストから取得）
 
         $words = Chinese::where('user_id', Auth::id())
             ->whereIn('question_type', $categories)

@@ -29,7 +29,7 @@ $decodedAnswer = json_decode($word->answer, true);
         @endif
     </div>
     <div class="w-1/12">
-        <div class="flex flex-col gap-x-2 items-center w-full">
+        <div class="flex flex-col space-y-2 items-center w-full">
             <a href="{{ route('chinese.modify', ['id' => $word->id]) }}"
                 class="w-20 p-2 flex items-center justify-center bg-orange-50 hover:bg-orange-100 rounded" type="submit">編集</a>
             <form action="{{ route('chinese.destroy', $word->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">

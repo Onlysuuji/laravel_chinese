@@ -17,7 +17,8 @@
     <!-- Web Manifest -->
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ $title }}</title>
@@ -28,7 +29,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/4.1.3/css/flag-icons.min.css">
 </head>
 
-<body>
+<body class="">
     <div class="flex flex-col h-screen">
 
         <nav
@@ -41,7 +42,7 @@
 
                     </a>
                 </div>
-                <div class="flex flex-row gap-3 px-3">
+                <div class="flex flex-row gap-3 px-3 text-xl">
                     <x-dropdown align="left">
                         <button @click = "open-stopwatch = ! open-stopwatch"
                             class="flex flex-row items-center text-black">
@@ -139,6 +140,7 @@
                             </x-slot>
                         </button>
                     </x-dropdown>
+                    {{-- アラーム --}}
                     <x-dropdown align="left" width="64">
                         <button @click = "open-stopwatch = ! open-stopwatch"
                             class="flex flex-row items-center text-black">
@@ -159,7 +161,8 @@
                             </x-slot>
                         </button>
                     </x-dropdown>
-                    <x-dropdown align="left" width="80">
+                    {{-- タイマー --}}
+                    <x-dropdown align="right" width="80">
                         <button @click = "open-stopwatch = ! open-stopwatch"
                             class="flex flex-row items-center text-black">
                             <x-slot name="trigger">

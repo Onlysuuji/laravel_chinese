@@ -2,26 +2,111 @@
     <script>
         function timerData() {
             return {
-                time: 0,
+                storageKey: '',
+                timerNumber: null,
+
+                remainingTime: 0,
+                endTime: null,
+                interval: null,
+                isRunning: false,
                 hours: 0,
                 minutes: 0,
-                seconds: 0, // secondsを適切に定義
+                seconds: 0,
 
-                intervalId: null,
-                isRunning: false,
+                init() {
+                    const savedData = localStorage.getItem(this.storageKey);
+                    if (savedData) {
+                        const parsedData = JSON.parse(savedData);
+                        this.hours = parsedData.hours || 0;
+                        this.minutes = parsedData.minutes || 0;
+                        this.seconds = parsedData.seconds || 0;
+                        this.isRunning = parsedData.isRunning || false;
+                        this.remainingTime = parsedData.remainingTime || 0;
+                        if (this.isRunning) {
+                            this.endTime = new Date(parsedData.endTime)
+                            this.startInterval();
+                        }
+                    }
+                    console.log(this.storageKey);
+                    console.log(savedData);
+                },
 
-                startTimer() {},
+                save(){
+                    localStorage.setItem(this.storageKey, JSON.stringify({
+                        hours: this.hours,
+                        minutes: this.minutes,
+                        seconds: this.seconds,
+                        isRunning: this.isRunning, 
+                        remainingTime: this.remainingTime,
+                        endTime: this.endTime,
+                    }));
+                },
 
-                stopTimer() {},
+                startTimer() {
+                    const currentTime = new Date();
+                    if (this.remainingTime === 0) {
+                        this.remainingTime = (this.hours * 3600 + this.minutes * 60 + this.seconds) * 1000;
+                    }
+                    if (this.remainingTime) {
+                        if(this.remainingTime >=360000000){
+                            this.remainingTime = 359999999;
+                        }
+                        this.endTime = new Date(currentTime.getTime() + this.remainingTime);
+                        this.isRunning = true;
+                        this.startInterval();
+                    }
+                },
 
-                resetTimer() {},
+                startInterval() {
+                    this.interval = setInterval(() => {
+                        const currentTime = new Date();
+                        this.remainingTime = Math.max(0, this.endTime - currentTime);
+                        if (this.remainingTime <= 0) {
+                            this.isRunning = false;
+                            this.endTime = 0;
+                            this.remainingTime = 0;
+                            clearInterval(this.interval);
+                            const audio = new Audio('/test.mp3');
+                            audio.play();
 
-                setTime() {},
+                            setTimeout(() => {
+                                alert(`タイマー${this.timerNumber}\n${this.hours}時間${this.minutes}分${this.seconds}秒経過しました。`);
+                                audio.pause();
+                                audio.currentTime = 0; // 音声を最初から再生する場合
+                            }, 100);
+                            
+                        }
+                        this.save();
+                    }, 100);
+                },
 
-                saveState() {},
+                pauseTimer() {
+                    clearInterval(this.interval);
+                    this.isRunning = false;
+                    this.save(); // 停止した状態を保存
+                },
 
-                get formattedTime() {},
-                init() {},
+                resetTimer() {
+                    if (this.remainingTime > 0 || this.isRunning) {
+                        clearInterval(this.interval);
+                        this.endTime = null;
+                        this.isRunning = false;
+                        this.remainingTime = 0;
+                        this.save();
+                    } else {
+                        this.hours = 0;
+                        this.minutes = 0;
+                        this.seconds = 0;
+                        this.save();
+                    }
+                },
+
+                get formattedTime() {
+                    const hours = String(Math.floor(this.remainingTime/1000 / 3600)).padStart(2, '0');
+                    const minutes = String(Math.floor((this.remainingTime/1000 % 3600) / 60)).padStart(2, '0');
+                    const seconds = String(Math.floor(this.remainingTime/1000 % 60)).padStart(2, '0');
+                    return `${hours}  :  ${minutes}  :  ${seconds}`;
+                },
             }
         }
     </script>
@@ -31,108 +116,6 @@
         <li><x-timer test="2"></x-timer></li>
         <li><x-timer test="3"></x-timer></li>
     </ul>
-    
-
-
-    <script>
-        function timerData() {
-            return {
-                time: 0,
-                hours: 0,
-                minutes: 0,
-                seconds: 0,
-                storageKey: '', // 保存するキー名を動的に変更したい場合のプロパティ
-
-                intervalId: null,
-                isRunning: false,
-                startTimer() {
-
-                    if (this.time <= 0) {
-                        this.setTime();
-                    }
-                    if (this.time == 0) return;
-
-
-                    this.isRunning = true;
-                    this.saveState();
-
-                    this.intervalId = setInterval(() => {
-                        if (this.time > 1) {
-                            this.time--;
-                            this.saveState(); // 停止した状態を保存
-                        } else {
-                            this.time = 0;
-                            this.stopTimer();
-                            alert(`タイマー終了`);
-
-                        }
-
-                    }, 1000);
-                },
-
-                stopTimer() {
-                    clearInterval(this.intervalId);
-                    this.intervalId = null;
-                    this.isRunning = false;
-                    this.saveState(); // 停止した状態を保存
-                },
-
-                resetTimer() {
-                    if (this.time <= 0) {
-                        this.hours = 0;
-                        this.minutes = 0;
-                        this.seconds = 0;
-                    }
-                    this.stopTimer();
-                    this.time = 0;
-                    this.saveState();
-                },
-
-                setTime() {
-                    this.time = (this.hours * 3600) + (this.minutes * 60) + this.seconds;
-                    this.saveState();
-                },
-
-                saveState() {
-                    // 現在のtimeとisRunningをlocalStorageに保存
-                    localStorage.setItem(
-                        this.storageKey,
-                        JSON.stringify({
-                            time: this.time,
-                            hours: this.hours,
-                            minutes: this.minutes,
-                            seconds: this.seconds,
-                            isRunning: this.isRunning
-                        })
-                    );
-                },
-
-                get formattedTime() {
-                    const hours = String(Math.floor(this.time / 3600)).padStart(2, '0');
-                    const minutes = String(Math.floor((this.time % 3600) / 60)).padStart(2, '0');
-                    const seconds = String(this.time % 60).padStart(2, '0');
-                    return `${hours}  :  ${minutes}  :  ${seconds}`;
-                },
-
-                init() {
-                    const savedData = localStorage.getItem(this.storageKey);
-                    if (savedData) {
-                        const parsedData = JSON.parse(savedData);
-                        this.time = parsedData.time || 0;
-                        this.hours = parsedData.hours || 0;
-                        this.minutes = parsedData.minutes || 0;
-                        this.seconds = parsedData.seconds || 0;
-                        this.isRunning = parsedData.isRunning || false;
-                        if (this.isRunning) {
-                            this.startTimer();
-
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
 
 
 </div>
