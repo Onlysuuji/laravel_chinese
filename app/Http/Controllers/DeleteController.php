@@ -10,11 +10,17 @@ class DeleteController extends Controller
 {
     public function destroy($id)
     {
+        $previous = url()->previous();
+
+        if ($previous === url('/chinese/answer')) {
+            $previous = url('/chinese');
+        }
+
         // データの削除処理
         $item = Chinese::where('user_id', Auth::id())->findOrFail($id);
         $item->delete();
 
         // 削除後にリダイレクト
-        return redirect()->to(url()->previous())->with('success', 'データが削除されました。');
+        return redirect()->to($previous)->with('success', 'データが削除されました。');
     }
 }

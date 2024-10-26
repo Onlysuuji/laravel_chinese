@@ -73,7 +73,7 @@
                                 alert(`タイマー${this.timerNumber}\n${this.hours}時間${this.minutes}分${this.seconds}秒経過しました。`);
                                 audio.pause();
                                 audio.currentTime = 0; // 音声を最初から再生する場合
-                            }, 100);
+                            }, 1000);
                             
                         }
                         this.save();

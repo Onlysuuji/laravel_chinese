@@ -35,7 +35,7 @@ $decodedAnswer = json_decode($word->answer, true);
             <form action="{{ route('chinese.destroy', $word->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
                 @csrf
                 @method('DELETE')
-                <button type="submit" class="w-20 p-2 flex items-center text-center justify-center bg-red-100 hover:bg-red-300 rounded">削除</button>
+                <button type="submit" class="w-20 p-2 flex items-center text-center justify-center bg-red-100 hover:bg-red-200 rounded">削除</button>
             </form>
         </div>
     </div>

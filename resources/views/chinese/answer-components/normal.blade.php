@@ -11,7 +11,7 @@
         <p class="w-full text-2xl bg-gray-100 rounded">問題の答え</p>
         <div id="solution_containers" class="w-5/6 rounded"></div>
     </div>
-
+    
 </div>
 
 

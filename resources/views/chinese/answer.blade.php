@@ -27,6 +27,15 @@
                 <a href="{{ route('chinese.modify', ['id' => $id]) }}" class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
                 type="submit">編集する</a>
             </div>
+            <form action="{{ route('chinese.destroy', $word->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
+                @csrf
+                @method('DELETE')
+                <div class="flex justify-center mt-5">
+                    <button type="submit"
+                        class="w-36 text-xl py-1 px-4 bg-red-100 hover:bg-red-200 text-red-400 hover:text-red-600 rounded">削除</button>
+        
+                </div>
+            </form>
             
         </div>
 

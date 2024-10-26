@@ -89,16 +89,6 @@
                                         </div>
                                     </div>
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('chinese.modify')">
-                                    <div class="flex flex-row items-center">
-                                        <div class='mr-2 w-9 h-9 flex items-center justify-center'>
-                                            <i class="fas fa-edit"></i>
-                                        </div>
-                                        <div class=' overflow-hidden text-ellipsis whitespace-nowrap '>
-                                            単語の修正
-                                        </div>
-                                    </div>
-                                </x-dropdown-link>
                             </x-slot>
                         </button>
                     </x-dropdown>

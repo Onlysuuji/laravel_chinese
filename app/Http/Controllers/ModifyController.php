@@ -13,7 +13,10 @@ class ModifyController extends Controller
     public function modify(Request $request)
     {
 
-        $request->session()->put('previous_url', url()->previous());
+        if (url()->previous() !== url('/modify')) {
+            $request->session()->put('previous_url', url()->previous());
+        }
+
         $userId = Auth::id();
 
         $word = Chinese::where('id', $request->query('id'))

@@ -37,7 +37,7 @@ class ChineseController extends Controller
         $question_type = $word->question_type;
         
         if($question_type == 'normal') {
-            return view('chinese/chinese', ['id' => $word->id, 'question' => $word->question, 'question_type' => $word->question_type]);
+            return view('chinese/chinese', compact('word'));
         }
         else if($question_type == 'select'){
 

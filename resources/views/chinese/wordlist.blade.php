@@ -77,14 +77,14 @@
                 <!-- ソートボタン 作成日 昇順 -->
                 <a @click=" categoryData('normal'); saveData()" :href="generateUrl()"
                     class="px-4 py-1 text-white rounded text-shadow-md shadow text-xs"
-                    :class="data.category.includes('normal') ? 'bg-red-600' : 'bg-red-200 hover:bg-red-400'">
+                    :class="data.category.includes('normal') ? 'bg-yellow-300' : 'bg-yellow-100 hover:bg-yellow-300'">
                     日→中
                 </a>
 
                 <!-- ソートボタン 作成日 降順 -->
                 <a @click=" categoryData('select'); saveData()" :href="generateUrl()"
                     class="px-4 py-1 text-white rounded text-shadow-md shadow text-xs"
-                    :class="data.category.includes('select') ? 'bg-sky-600' : 'bg-sky-200 hover:bg-sky-400'">
+                    :class="data.category.includes('select') ? 'bg-sky-400' : 'bg-sky-200 hover:bg-sky-400'">
                     選択形式
                 </a>
 
@@ -97,7 +97,7 @@
 
                 <!-- 検索ボタン -->
                 <a @click="saveData()" :href="generateUrl()"
-                    class="px-4 py-2 text-white rounded text-shadow-md shadow">
+                    class="px-2 py-1 rounded text-sm text-gray-800 shadow">
                     検索
                 </a>
             </div>
@@ -146,10 +146,11 @@
             <div
                 class="block md:w-full border-4 border-black ring-2 ring-black ring-offset-2 ring-offset-rose-800 text-sm">
                 @forelse ($words as $word)
-                    <div class="m-1 flex flex-col items-center bg-yellow-200 rounded">
                         @if ($word->question_type === 'normal')
+                        <div class="m-1 flex flex-col items-center bg-yellow-200 rounded">
                             @include('chinese.wordlist-components.normal')
                         @elseif($word->question_type === 'select')
+                        <div class="m-1 flex flex-col items-center bg-sky-200 rounded">
                             @include('chinese.wordlist-components.select')
                         @endif
                     </div>

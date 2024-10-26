@@ -3,7 +3,7 @@
 <div class="flex justify-center w-full">
     <div class="flex flex-col  justify-center mt-5 w-80 gap-y-6">
         <!-- 問題文 -->
-        <p class="flex justify-center text-2xl bg-gray-100 rounded ">正しい選択肢を選べ</p>
+        <p class="flex justify-center text-2xl rounded ">正しい選択肢を選べ</p>
         <div class="flex text-2xl">
             <p class="w-1/2 flex justify-center items-center">問題:</p>
             <p class="w-1/2 break-words text-center">{{ $word->question }}</p>
