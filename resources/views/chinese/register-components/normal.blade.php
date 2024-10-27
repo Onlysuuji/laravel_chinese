@@ -3,10 +3,10 @@
     <div class="flex justify-center text-lg">
         日本語から中国語
     </div>
-    <div id="normal_question">
+    <div id="normal_question" class="space-y-3">
 
-        <div class="my-4 roungded-lg flex justify-center">
-            <input type="text" id="question_normal" class="rounded-lg" placeholder="日本語を入力">
+        <div class="my-6 roungded-lg flex justify-center">
+            <input type="text" id="question_normal" class="rounded-lg w-full w-" placeholder="日本語を入力">
         </div>
         <div id="error-question"></div>
 
@@ -21,6 +21,7 @@
         <div class="error-radio"></div>
     </div>
 
+
 </div>
 
 
@@ -31,24 +32,40 @@
         newDiv.className = 'normal_container';
 
         newDiv.innerHTML = `
-                <span class="sisheng_pinyin"></span>
-                <input id="sisheng" type="number" class="sisheng" placeholder="四声を入力">
-                <input id="pinyin" type="text" class="pinyin" placeholder="ピンインを入力">
-                <input type="text" class="kantaiji" placeholder="簡体字を入力">
-                <button class="bg-red-100 text-red-500 px-7 py-3 mx-5 rounded" onclick="removeNormal(this)">削除</button>
-                <div class="error-sisheng"></div>
-                <div class="error-pinyin"></div>
-                <div class="error-kantaiji"></div>
+                <div class="flex gap-x-2 sm:block sm:space-y-1 sm:gap-y-1">
+                    <div class="flex-1 sm:flex">
+                        <input id="sisheng" type="number" class="sisheng" style="border-radius: 0.25rem;width: 100%;" placeholder="四声を入力" required>
+                        <input id="pinyin" type="text" class="pinyin" style="border-radius: 0.25rem;width: 100%;" placeholder="ピンインを入力">
+                        <input type="text" class="kantaiji" style="border-radius: 0.25rem;width: 100%;" placeholder="簡体字を入力">
+                    </div>
+                    <div class="flex gap-x-2 space-x-2  hidden sm:block">
+                        <div class="error-sisheng"></div>
+                        <div class="error-pinyin"></div>
+                        <div class="error-kantaiji"></div>
+                    </div>
+                    <div class="flex-1 sm:flex sm:justify-between">
+                        <div class="h-10 sm:w-52   text-xl border-b-4 text-center overflow-x-auto whitespace-nowrap" >
+                            <text class="sisheng_pinyin"></text>
+                        </div>
+                        <input placeholder="コメント" class="rounded w-full sm:w-44">
+                        <button class="bg-red-100 text-red-500 px-5 mx-5 py-2 rounded" onclick="removeNormal(this)">削除</button>
+                    </div>
+                </div>
             `;
         container.appendChild(newDiv);
     }
 
     function removeNormal(element) {
         const container = document.getElementById('normal_containers');
-        if (container.children.length > 1) {
-            container.removeChild(element.parentElement);
-        } else {
+        const targetElement = element.closest('.normal_container'); // 削除対象を特定
+
+        // targetElementがcontainerの直接の子か確認
+        if (container && targetElement && Array.from(container.children).includes(targetElement)) {
+            container.removeChild(targetElement);
+        } else if (container.children.length <= 1) {
             alert('これ以上減らすことはできません');
+        } else {
+            console.warn("The node to be removed is not a direct child of the container.");
         }
     }
 
@@ -88,20 +105,20 @@
             const kantaiji = container.querySelector('input.kantaiji').value;
 
             if (sisheng == "") {
-                container.querySelector('div.error-sisheng').textContent = "四声を入力してください  ";
+                container.querySelectorAll('[class*="error-sisheng"]').textContent = "四声を入力してください  ";
                 allow = false;
             } else if (!checkNumber(sisheng)) {
-                container.querySelector('div.error-sisheng').textContent = "0から4の数字を入れてください  ";
+                container.querySelector('[class*="error-sisheng"]').textContent = "0から4の数字を入れてください  ";
                 allow = false;
             } else {
-                container.querySelector('div.error-sisheng').textContent = "";
+                container.querySelector('[class*="error-sisheng"]').textContent = "";
             }
 
             if (pinyin == "") {
-                container.querySelector('div.error-pinyin').textContent = "ピンインを入力してください  ";
+                container.querySelector('[class*="error-pinyin"]').textContent = "ピンインを入力してください  ";
                 allow = false;
             } else {
-                container.querySelector('div.error-pinyin').textContent = "";
+                container.querySelector('[class*="error-pinyin"]').textContent = "";
             }
             if (kantaiji == "") {
                 container.querySelector('div.error-kantaiji').textContent = "簡体字を入力してください  ";
@@ -150,7 +167,7 @@
                 .then(formData => {
                     // すべての input フィールドを取得
                     const inputs = document.querySelectorAll('input');
-                    const spans = document.querySelectorAll('span');
+                    const texts = document.querySelectorAll('text');
 
                     // それぞれの input フィールドの value を空にする
                     inputs.forEach(input => {
@@ -160,9 +177,9 @@
                     });
 
                     // クラス名が "sisheng_pinyin" の span 要素のテキスト内容を空にする
-                    spans.forEach(span => {
-                        if (span.classList.contains('sisheng_pinyin')) {
-                            span.textContent = ''; // spanのテキストを空にする
+                    texts.forEach(text => {
+                        if (text.classList.contains('sisheng_pinyin')) {
+                            text.textContent = ''; // spanのテキストを空にする
                         }
                     });
 
@@ -185,14 +202,14 @@
             console.log(container);
 
             container.querySelector('input.sisheng').addEventListener('input', () => {
-                container.querySelector('span.sisheng_pinyin').textContent = mergeSishengPinyin(
+                container.querySelector('text.sisheng_pinyin').textContent = mergeSishengPinyin(
                     container.querySelector('input.sisheng').value, container.querySelector(
                         'input.pinyin')
 
                     .value);
             });
             container.querySelector('input.pinyin').addEventListener('input', () => {
-                container.querySelector('span.sisheng_pinyin').textContent = mergeSishengPinyin(
+                container.querySelector('text.sisheng_pinyin').textContent = mergeSishengPinyin(
                     container.querySelector('input.sisheng').value, container.querySelector(
                         'input.pinyin')
                     .value);

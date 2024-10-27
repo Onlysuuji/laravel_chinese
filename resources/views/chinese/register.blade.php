@@ -2,7 +2,7 @@
     <x-slot name="title">
         単語登録
     </x-slot>
-    <div x-data="{ selectedOption: 'select' }" class="flex flex-col justify-center items-center" id="question_type">
+    <div x-data="{ selectedOption: 'normal' }" class="mx-4 flex flex-col justify-center items-center" id="question_type">
         <div class="flex justify-center  mt-5 gap-10">
             <button @click="selectedOption = 'normal'"
                 class="p-2 px-5 rounded-md shadow-sm ring ring-gray-300 hover:ring-gray-400"
