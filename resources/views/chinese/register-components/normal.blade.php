@@ -1,16 +1,21 @@
-<div id="normal">
+<div id="normal" class="space-y-5">
 
     <div class="flex justify-center text-lg">
         日本語から中国語
     </div>
-    <div id="normal_question" class="space-y-3">
+    <div id="normal_question" class="space-y-5">
 
-        <div class="my-6 roungded-lg flex justify-center">
+        <div class="roungded-lg flex justify-center">
             <input type="text" id="question_normal" class="rounded-lg w-full w-" placeholder="日本語を入力">
         </div>
         <div id="error-question"></div>
 
         <div id="normal_containers" class="normal_containers">
+        </div>
+        <div id="comment_container" class="block sm:flex justify-center items-center text-lg">
+            <p class="sm:w-1/3">解説を入れる(任意):</p>
+    
+            <input type="text" class="flex-1 rounded" id="comment" placeholder="解説を入れる">
         </div>
     </div>
 
@@ -43,12 +48,11 @@
                         <div class="error-pinyin"></div>
                         <div class="error-kantaiji"></div>
                     </div>
-                    <div class="flex-1 sm:flex sm:justify-between">
+                    <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
                         <div class="h-10 sm:w-52   text-xl border-b-4 text-center overflow-x-auto whitespace-nowrap" >
                             <text class="sisheng_pinyin"></text>
                         </div>
-                        <input placeholder="コメント" class="rounded w-full sm:w-44">
-                        <button class="bg-red-100 text-red-500 px-5 mx-5 py-2 rounded" onclick="removeNormal(this)">削除</button>
+                        <button class="bg-red-100 text-red-500 px-5 mx-12 my-1 py-2 rounded" onclick="removeNormal(this)">削除</button>
                     </div>
                 </div>
             `;
@@ -139,11 +143,13 @@
         if (allow) {
             console.log("a")
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            const comment = document.getElementById('comment').value ?? null;
 
             const formData = new FormData();
             formData.append('answer', JSON.stringify(data));
             formData.append('question', question);
             formData.append('question_type', 'normal');
+            formData.append('comment', comment);
             formData.forEach((value, key) => {
                 console.log(`${key}: ${value}`);
             });
@@ -197,25 +203,29 @@
     } from '/onlysuuji.js';
     // コンテナ内の要素を更新する関数
     function updateContent() {
-        const containers = document.querySelectorAll('.normal_container');
-        containers.forEach(container => {
-            console.log(container);
+        $('.normal_container').each(function() {
+            const container = $(this);
 
-            container.querySelector('input.sisheng').addEventListener('input', () => {
-                container.querySelector('text.sisheng_pinyin').textContent = mergeSishengPinyin(
-                    container.querySelector('input.sisheng').value, container.querySelector(
-                        'input.pinyin')
+            container.find('input.sisheng').on('input', function() {
+                container.find('text.sisheng_pinyin').text(
+                    mergeSishengPinyin(
+                        container.find('input.sisheng').val(),
+                        container.find('input.pinyin').val()
+                    )
+                );
+            });
 
-                    .value);
+            container.find('input.pinyin').on('input', function() {
+                container.find('text.sisheng_pinyin').text(
+                    mergeSishengPinyin(
+                        container.find('input.sisheng').val(),
+                        container.find('input.pinyin').val()
+                    )
+                );
             });
-            container.querySelector('input.pinyin').addEventListener('input', () => {
-                container.querySelector('text.sisheng_pinyin').textContent = mergeSishengPinyin(
-                    container.querySelector('input.sisheng').value, container.querySelector(
-                        'input.pinyin')
-                    .value);
-            });
-        })
+        });
     }
+
     document.addEventListener('DOMContentLoaded', function() {
         $("#addNormal").click(function() {
             addNormal(); // まず、addNormal関数を実行
