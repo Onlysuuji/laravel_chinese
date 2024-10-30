@@ -16,11 +16,6 @@ class ModifyController extends Controller
 
         $previous = url()->previous();
 
-        // 前のURLが '/chinese/answer' で始まっている場合、'/chinese' に置き換え
-        if (Str::startsWith($previous, url('/chinese/answer'))) {
-            $previous = url('/chinese');
-        }
-
         $userId = Auth::id();
 
         $word = Chinese::where('id', $request->query('id'))
