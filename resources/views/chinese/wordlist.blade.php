@@ -1,4 +1,4 @@
-<x-test2-layout>
+<x-test-layout>
     <x-slot name="title">
         単語リスト
     </x-slot>
@@ -60,7 +60,7 @@
                     // URLを動的に生成する関数
                     const baseUrl = `{{ route('chinese.wordlist') }}`;
                     const queryString =
-                        `order=${this.data.order}&search=${this.data.searchKeyword}&sort=${this.data.sort}&${this.data.category.map(cat => `category[]=${encodeURIComponent(cat)}`).join('&')}`;
+                        `order=${this.data.order}&search=${this.data.searchKeyword}&sort=${this.data.sort}&category[]= &${this.data.category.map(cat => `category[]=${encodeURIComponent(cat)}`).join('&')}`;
                     return `${baseUrl}?${queryString}`;
                 }
             };
@@ -165,4 +165,4 @@
 
 
 
-</x-test2-layout>
+</x-test-layout>

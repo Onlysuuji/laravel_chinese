@@ -32,9 +32,11 @@
 <body>
     <div class="flex flex-col h-screen">
 
-        <nav
-            class='flex h-20 justify-between w-[755px] md:w-full top-0 left-0 shadow-[0_0_64px_0_rgba(0,0,0,0.07)] border-b-4 border-gray-100'>
-            <div class="flex justify-between gap-10 items-center">
+
+        <nav x-data="{width: windows.location === 'route(`chinese.wordlist`)' ? 'w-[768px]' : 'w-full'}"
+        :class="width"
+            class='flex h-20 justify-between top-0 left-0 shadow-[0_0_64px_0_rgba(0,0,0,0.07)] border-b-4 border-gray-100'>
+            <div class="flex justify-between md:gap-10 items-center">
                 <div class="px-5">
                     <a href="chinese" class="flex flex-row items-center text-black">
                         <span class="mt-1 font-medium">OnlyS</span>
@@ -131,7 +133,7 @@
                         </button>
                     </x-dropdown>
                     {{-- アラーム --}}
-                    <x-dropdown align="left" width="64">
+                    <x-dropdown align="right" width="64">
                         <button @click = "open-stopwatch = ! open-stopwatch"
                             class="flex flex-row items-center text-black">
                             <x-slot name="trigger">
