@@ -31,12 +31,12 @@
                     console.log(savedData);
                 },
 
-                save(){
+                save() {
                     localStorage.setItem(this.storageKey, JSON.stringify({
                         hours: this.hours,
                         minutes: this.minutes,
                         seconds: this.seconds,
-                        isRunning: this.isRunning, 
+                        isRunning: this.isRunning,
                         remainingTime: this.remainingTime,
                         endTime: this.endTime,
                     }));
@@ -48,7 +48,7 @@
                         this.remainingTime = (this.hours * 3600 + this.minutes * 60 + this.seconds) * 1000;
                     }
                     if (this.remainingTime) {
-                        if(this.remainingTime >=360000000){
+                        if (this.remainingTime >= 360000000) {
                             this.remainingTime = 359999999;
                         }
                         this.endTime = new Date(currentTime.getTime() + this.remainingTime);
@@ -66,15 +66,17 @@
                             this.endTime = 0;
                             this.remainingTime = 0;
                             clearInterval(this.interval);
-                            const audio = new Audio('/test.mp3');
+                            const audio = Math.random() < 0.05 ? new Audio('/test1.mp3') : new Audio('/test.mp3');
+
                             audio.play();
 
                             setTimeout(() => {
-                                alert(`タイマー${this.timerNumber}\n${this.hours}時間${this.minutes}分${this.seconds}秒経過しました。`);
+                                alert(
+                                    `タイマー${this.timerNumber}\n${this.hours}時間${this.minutes}分${this.seconds}秒経過しました。`);
                                 audio.pause();
                                 audio.currentTime = 0; // 音声を最初から再生する場合
-                            }, 100);
-                            
+                            }, 300);
+
                         }
                         this.save();
                     }, 100);
@@ -102,9 +104,9 @@
                 },
 
                 get formattedTime() {
-                    const hours = String(Math.floor(this.remainingTime/1000 / 3600)).padStart(2, '0');
-                    const minutes = String(Math.floor((this.remainingTime/1000 % 3600) / 60)).padStart(2, '0');
-                    const seconds = String(Math.floor(this.remainingTime/1000 % 60)).padStart(2, '0');
+                    const hours = String(Math.floor(this.remainingTime / 1000 / 3600)).padStart(2, '0');
+                    const minutes = String(Math.floor((this.remainingTime / 1000 % 3600) / 60)).padStart(2, '0');
+                    const seconds = String(Math.floor(this.remainingTime / 1000 % 60)).padStart(2, '0');
                     return `${hours}  :  ${minutes}  :  ${seconds}`;
                 },
             }

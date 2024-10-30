@@ -28,16 +28,16 @@ class ChineseController extends Controller
             
         }
 
-        if (!$word) {
-            return view('chinese/chinese', ['question_type' => 'noWord', 'id' => NULL]);
+        $question_type = $word->question_type ?? 'noWord';;
+        if ($question_type === 'noWord') {
+            return view('chinese/chinese', compact('question_type'));
         }
 
         // 初期設定など
         session(['starttime' => time()]);
-        $question_type = $word->question_type;
         
         if($question_type == 'normal') {
-            return view('chinese/chinese', compact('word'));
+            return view('chinese/chinese', compact('word','question_type'));
         }
         else if($question_type == 'select'){
 
@@ -45,6 +45,9 @@ class ChineseController extends Controller
             $choices = json_decode($word->choices, true);
             $choices['option'][] = $word->question_answer;
             return view('chinese/chinese', compact('word', 'question_type', 'choices'));
+
+        }
+        else{
 
         }
     }

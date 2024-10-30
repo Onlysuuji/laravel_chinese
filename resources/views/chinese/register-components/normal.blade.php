@@ -48,7 +48,7 @@
                         <div class="error-pinyin"></div>
                         <div class="error-kantaiji"></div>
                     </div>
-                    <div class="flex-1 flex flex-col sm:flex-row sm:justify-between">
+                    <div class="flex-1 flex flex-col sm:flex-row sm:justify-around">
                         <div class="h-10 sm:w-52   text-xl border-b-4 text-center overflow-x-auto whitespace-nowrap" >
                             <text class="sisheng_pinyin"></text>
                         </div>

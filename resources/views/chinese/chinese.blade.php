@@ -7,7 +7,7 @@
         chinese
     </x-slot>
 
-    @if ($word->question_type == 'j_to_c' || $word->question_type == 'normal')
+    @if ($question_type == 'j_to_c' || $question_type == 'normal')
         @include('chinese.chinese-components.chinese-normal')
     @elseif ($question_type == 'select')
         @include('chinese.chinese-components.chinese-select')

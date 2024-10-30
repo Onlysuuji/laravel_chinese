@@ -39,6 +39,9 @@
             </div>
 
             <div id="add_button" class="flex items-center justify-center">
+                <button class="bg-yellow-100 text-yellow-500 px-7 py-3 mx-5 rounded hover:bg-yellow-200" id="sendSelect"
+                    name="sendSelect" onclick="history.back()">編集せずに戻る</button>
+
                 <button class="bg-green-100 text-green-500 px-7 py-3 mx-5 rounded hover:bg-green-200" id="sendSelect"
                     name="sendSelect" onclick="saveSelect()">編集する</button>
                 <div class="error-radio"></div>
@@ -47,7 +50,6 @@
     </div>
 </div>
 <script>
-
     function addSelect() {
         const container = document.getElementById('select_containers');
         const newDiv = document.createElement('div');

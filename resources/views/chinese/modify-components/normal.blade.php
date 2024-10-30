@@ -1,5 +1,4 @@
-
-<div id="normal">
+<div id="normal" class="flex flex-col items-center">
 
     <div class="flex justify-center text-lg">
         日本語から中国語
@@ -7,20 +6,27 @@
     <div id="normal_question" class="space-y-3">
 
         <div class="my-6 roungded-lg flex justify-center">
-            <input type="text" id="question_normal" class="rounded-lg w-1/2" placeholder="日本語を入力" value="{{$word->question}}">
+            <input type="text" id="question_normal" class="rounded-lg w-1/2" placeholder="日本語を入力"
+                value="{{ $word->question }}">
         </div>
         <div id="error-question"></div>
 
         <div id="normal_containers" class="normal_containers">
         </div>
+        <div id="comment_container" class="block sm:flex justify-center items-center text-lg">
+            <p class="sm:w-1/3">解説を入れる(任意):</p>
+
+            <input type="text" class="flex-1 rounded" id="comment" placeholder="解説を入れる">
+        </div>
+        <div id="add_button" class="flex items-center justify-center">
+            <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" id="addNormal">別解を追加</button>
+            <button class="bg-green-100 text-green-500 px-7 py-3 mx-5 rounded" id="sendNormal"
+                name="sendNormal">登録する</button>
+            <div class="error-radio"></div>
+        </div>
     </div>
 
-    <div id="add_button" class="flex items-center justify-center">
-        <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" id="addNormal">別解を追加</button>
-        <button class="bg-green-100 text-green-500 px-7 py-3 mx-5 rounded" id="sendNormal"
-            name="sendNormal">登録する</button>
-        <div class="error-radio"></div>
-    </div>
+    
 
 
 </div>
@@ -33,20 +39,19 @@
         newDiv.innerHTML = `
                 <div class="flex gap-x-2 sm:block sm:space-y-1 sm:gap-y-1">
                     <div class="flex-1 sm:flex">
-                        <input id="sisheng" type="number" class="sisheng" style="border-radius: 0.25rem;width: 100%;" placeholder="四声を入力" required>
-                        <input id="pinyin" type="text" class="pinyin" style="border-radius: 0.25rem;width: 100%;" placeholder="ピンインを入力">
-                        <input type="text" class="kantaiji" style="border-radius: 0.25rem;width: 100%;" placeholder="簡体字を入力">
+                        <input id="sisheng" type="number" class="sisheng" style="border-radius: 0.25rem;" placeholder="四声を入力" required>
+                        <input id="pinyin" type="text" class="pinyin" style="border-radius: 0.25rem;" placeholder="ピンインを入力">
+                        <input type="text" class="kantaiji" style="border-radius: 0.25rem;" placeholder="簡体字を入力">
                     </div>
                     <div class="flex gap-x-2 space-x-2  hidden sm:block">
                         <div class="error-sisheng"></div>
                         <div class="error-pinyin"></div>
                         <div class="error-kantaiji"></div>
                     </div>
-                    <div class="flex-1 sm:flex sm:justify-between">
+                    <div class="flex-1 sm:flex sm:justify-around">
                         <div class="h-10 sm:w-52   text-xl border-b-4 text-center overflow-x-auto whitespace-nowrap" >
                             <text class="sisheng_pinyin"></text>
                         </div>
-                        <input placeholder="コメント" class="rounded w-full sm:w-44">
                         <button class="bg-red-100 text-red-500 px-5 mx-5 py-2 rounded" onclick="removeNormal(this)">削除</button>
                     </div>
                 </div>
@@ -214,20 +219,19 @@
         $newDiv.html(`
         <div class="flex gap-x-2 sm:block sm:space-y-1 sm:gap-y-1">
             <div class="flex-1 sm:flex">
-                <input id="sisheng" type="number" class="sisheng" style="border-radius: 0.25rem;width: 100%;" placeholder="四声を入力" value="${old_answer.sisheng[i]}">
-                <input id="pinyin" type="text" class="pinyin" style="border-radius: 0.25rem;width: 100%;" placeholder="ピンインを入力" value="${old_answer.pinyin[i]}">
-                <input type="text" class="kantaiji" style="border-radius: 0.25rem;width: 100%;" placeholder="簡体字を入力" value="${old_answer.kantaiji[i]}">
+                <input id="sisheng" type="number" class="sisheng" style="border-radius: 0.25rem;" placeholder="四声を入力" value="${old_answer.sisheng[i]}">
+                <input id="pinyin" type="text" class="pinyin" style="border-radius: 0.25rem;" placeholder="ピンインを入力" value="${old_answer.pinyin[i]}">
+                <input type="text" class="kantaiji" style="border-radius: 0.25rem;" placeholder="簡体字を入力" value="${old_answer.kantaiji[i]}">
             </div>
             <div class="flex gap-x-2 space-x-2  hidden sm:block">
                 <div class="error-sisheng"></div>
                 <div class="error-pinyin"></div>
                 <div class="error-kantaiji"></div>
             </div>
-            <div class="flex-1 sm:flex sm:justify-between">
+            <div class="flex-1 sm:flex sm:justify-around">
                 <div class="h-10 sm:w-52   text-xl border-b-4 text-center overflow-x-auto whitespace-nowrap" >
                     <text class="sisheng_pinyin">${sisheng_pinyin}</text>
                 </div>
-                <input placeholder="コメント" class="rounded w-full sm:w-44" value="">
                 <button class="bg-red-100 text-red-500 px-5 mx-5 py-2 rounded" onclick="removeNormal(this)">削除</button>
             </div>
         </div>
