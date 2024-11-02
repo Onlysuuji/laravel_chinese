@@ -9,7 +9,12 @@ use App\Http\Controllers\ModifyController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\WordListController;
+use App\Http\Controllers\EnglishWordlist;
+use App\Http\Controllers\EnglishRegister;
+use App\Http\Controllers\EnglishModify;
+use App\Http\Controllers\EnglishAnswer;
 use App\Http\Controllers\EnglishController;
+use App\Http\Controllers\EnglishDelete;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,16 +41,17 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    
     Route::get('/english', [EnglishController::class, 'showWord'])->name('english');
     Route::prefix('english')->group(function () {
-        Route::patch('/answer', [AnswerController::class, 'checkAnswer'])->name('english.answer');
-        Route::get('/answer', [AnswerController::class, 'showAnswer'])->name('english.showanswer');
-        Route::get('/register_word', [RegisterController::class, 'register'])->name('english.register');
-        Route::post('/register_word', [RegisterController::class, 'registerToDB'])->name('english.registerToDB');
-        Route::get('/modify', [ModifyController::class, 'modify'])->name('english.modify');
-        Route::post('/modify', [ModifyController::class, 'modifyWord'])->name('english.modifyWord');
-        Route::get('/wordlist', [WordListController::class, 'wordlist'])->name('english.wordlist');
-        Route::delete('/delete/{id}', [DeleteController::class, 'destroy'])->name('english.destroy');
+        Route::patch('/answer', [EnglishAnswer::class, 'checkAnswer'])->name('english.answer');
+        Route::get('/answer', [EnglishAnswer::class, 'showAnswer'])->name('english.showanswer');
+        Route::get('/register_word', [EnglishRegister::class, 'register'])->name('english.register');
+        Route::post('/register_word', [EnglishRegister::class, 'registerToDB'])->name('english.registerToDB');
+        Route::get('/modify', [EnglishModify::class, 'modify'])->name('english.modify');
+        Route::post('/modify', [EnglishModify::class, 'modifyWord'])->name('english.modifyWord');
+        Route::get('/wordlist', [EnglishWordlist::class, 'wordlist'])->name('english.wordlist');
+        Route::delete('/delete/{id}', [EnglishDelete::class, 'destroy'])->name('english.destroy');
     });
 
 

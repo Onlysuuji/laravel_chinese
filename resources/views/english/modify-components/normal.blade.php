@@ -16,7 +16,7 @@
         <div id="comment_container" class="block sm:flex justify-center items-center text-lg">
             <p class="sm:w-1/3">解説を入れる(任意):</p>
 
-            <input type="text" class="flex-1 rounded" id="comment" value={{$word->comment}}  placeholder="解説を入れる">
+            <input type="text" class="flex-1 rounded" id="comment" value={{$word->comment}} placeholder="解説を入れる">
         </div>
         <div id="add_button" class="flex items-center justify-center">
             <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" id="addNormal">別解を追加</button>
@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    
+
 
 
 </div>
@@ -39,20 +39,11 @@
         newDiv.innerHTML = `
                 <div class="flex gap-x-2 sm:block sm:space-y-1 sm:gap-y-1">
                     <div class="flex-1 sm:flex">
-                        <input id="sisheng" type="number" class="sisheng" style="border-radius: 0.25rem;" placeholder="四声を入力" required>
-                        <input id="pinyin" type="text" class="pinyin" style="border-radius: 0.25rem;" placeholder="ピンインを入力">
-                        <input type="text" class="kantaiji" style="border-radius: 0.25rem;" placeholder="簡体字を入力">
+                        <input id="english" type="text" class="english" style="border-radius: 0.25rem;" placeholder="英訳を入力">
+                        <button class="bg-red-100 text-red-500 px-5 mx-5 py-2 rounded" onclick="removeNormal(this)">削除</button>
                     </div>
                     <div class="flex gap-x-2 space-x-2  hidden sm:block">
-                        <div class="error-sisheng"></div>
-                        <div class="error-pinyin"></div>
-                        <div class="error-kantaiji"></div>
-                    </div>
-                    <div class="flex-1 sm:flex sm:justify-around">
-                        <div class="h-10 sm:w-52   text-xl border-b-4 text-center overflow-x-auto whitespace-nowrap" >
-                            <text class="sisheng_pinyin"></text>
-                        </div>
-                        <button class="bg-red-100 text-red-500 px-5 mx-5 py-2 rounded" onclick="removeNormal(this)">削除</button>
+                        <div class="error-english"></div>
                     </div>
                 </div>
             `;
@@ -84,10 +75,9 @@
         const question = document.getElementById('question_normal').value;
         const comment = $('#comment').val() || null;
 
+
         const data = {
-            sisheng: [],
-            pinyin: [],
-            kantaiji: []
+            english: [],
         };
         let allow = true;
 
@@ -101,39 +91,17 @@
 
 
         containers.forEach(container => {
-            // sishengクラスとpinyinクラスを持つinputを取得
-            const sisheng = container.querySelector('input.sisheng').value;
-            const pinyin = container.querySelector('input.pinyin').value;
-            const kantaiji = container.querySelector('input.kantaiji').value;
+            // englishクラスとenglishクラスを持つinputを取得
+            const english = container.querySelector('input.english').value;
 
-            if (sisheng == "") {
-                container.querySelector('div.error-sisheng').textContent = "四声を入力してください  ";
-                allow = false;
-            } else if (!checkNumber(sisheng)) {
-                container.querySelector('div.error-sisheng').textContent = "0から4の数字を入れてください  ";
+            if (english == "") {
+                container.querySelector('div.error-english').textContent = "英訳を入力してください  ";
                 allow = false;
             } else {
-                container.querySelector('div.error-sisheng').textContent = "";
+                container.querySelector('div.error-english').textContent = "";
             }
 
-            if (pinyin == "") {
-                container.querySelector('div.error-pinyin').textContent = "ピンインを入力してください  ";
-                allow = false;
-            } else {
-                container.querySelector('div.error-pinyin').textContent = "";
-            }
-            if (kantaiji == "") {
-                container.querySelector('div.error-kantaiji').textContent = "簡体字を入力してください  ";
-                allow = false;
-            } else {
-                container.querySelector('div.error-kantaiji').textContent = "";
-            }
-
-
-            // それぞれの値をdataオブジェクトに追加
-            data.sisheng.push(sisheng);
-            data.pinyin.push(pinyin);
-            data.kantaiji.push(kantaiji);
+            data.english.push(english);
 
         });
         const jsonOutput = JSON.stringify(data);
@@ -150,7 +118,7 @@
                 console.log(`${key}: ${value}`);
             });
 
-            fetch('{{ route('chinese.modifyWord') }}', {
+            fetch('{{ route('english.modifyWord') }}', {
                     method: 'POST',
                     headers: {
                         'X-CSRF-TOKEN': csrfToken // CSRFトークンをヘッダーに追加
@@ -178,63 +146,26 @@
                 });
         }
     }
-</script>
-
-<script type="module">
-    import {
-        mergeSishengPinyin
-    } from '/onlysuuji.js';
-    // ページが完全に読み込まれたときに実行
-    function updateContent() {
-        const containers = document.querySelectorAll('.normal_container');
-        containers.forEach(container => {
-            container.querySelector('input.sisheng').addEventListener('input', () => {
-                container.querySelector('text.sisheng_pinyin').textContent = mergeSishengPinyin(
-                    container.querySelector('input.sisheng').value, container.querySelector(
-                        'input.pinyin').value);
-            });
-            container.querySelector('input.pinyin').addEventListener('input', () => {
-                container.querySelector('text.sisheng_pinyin').textContent = mergeSishengPinyin(
-                    container.querySelector('input.sisheng').value, container.querySelector(
-                        'input.pinyin').value);
-            });
-        })
-    }
-
-    function showChinese() {
-
-    }
-
 
     const old_answer = {!! $word->answer !!};
     console.log(old_answer);
-    // sishengs の要素数を数える
-    const count = old_answer.sisheng.length;
+    // englishs の要素数を数える
+    const count = old_answer.english.length;
 
     for (let i = 0; i < count; i++) {
         const $container = $('#normal_containers');
         const $newDiv = $('<div>', {
             class: 'normal_container'
         });
-        const sisheng_pinyin = mergeSishengPinyin(old_answer.sisheng[i], old_answer.pinyin[i]);
 
         $newDiv.html(`
         <div class="flex gap-x-2 sm:block sm:space-y-1 sm:gap-y-1">
             <div class="flex-1 sm:flex">
-                <input id="sisheng" type="number" class="sisheng" style="border-radius: 0.25rem;" placeholder="四声を入力" value="${old_answer.sisheng[i]}">
-                <input id="pinyin" type="text" class="pinyin" style="border-radius: 0.25rem;" placeholder="ピンインを入力" value="${old_answer.pinyin[i]}">
-                <input type="text" class="kantaiji" style="border-radius: 0.25rem;" placeholder="簡体字を入力" value="${old_answer.kantaiji[i]}">
+                <input id="english" type="text" class="english" style="border-radius: 0.25rem;" placeholder="英訳を入力" value="${old_answer.english[i]}">
+                <button class="bg-red-100 text-red-500 px-5 mx-5 py-2 rounded" onclick="removeNormal(this)">削除</button>
             </div>
             <div class="flex gap-x-2 space-x-2  hidden sm:block">
-                <div class="error-sisheng"></div>
-                <div class="error-pinyin"></div>
-                <div class="error-kantaiji"></div>
-            </div>
-            <div class="flex-1 sm:flex sm:justify-around">
-                <div class="h-10 sm:w-52   text-xl border-b-4 text-center overflow-x-auto whitespace-nowrap" >
-                    <text class="sisheng_pinyin">${sisheng_pinyin}</text>
-                </div>
-                <button class="bg-red-100 text-red-500 px-5 mx-5 py-2 rounded" onclick="removeNormal(this)">削除</button>
+                <div class="error-english"></div>
             </div>
         </div>
     `);
@@ -246,14 +177,11 @@
     document.addEventListener('DOMContentLoaded', function() {
         $("#addNormal").click(function() {
             addNormal(); // まず、addNormal関数を実行
-            updateContent(); // 次に、updateContent関数を実行
         });
 
         $("#sendNormal").click(function() {
             saveNormal();
-            updateContent(); // 次に、updateContent関数を実行
         })
 
-        updateContent();
     });
 </script>
