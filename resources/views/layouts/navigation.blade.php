@@ -23,6 +23,12 @@
                         {{ __('Chinese') }}
                     </x-nav-link>
                 </div>
+
+                <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                    <x-nav-link :href="route('english')" :active="request()->routeIs('chinese')">
+                        {{ __('English') }}
+                    </x-nav-link>
+                </div>
             </div>
 
             <!-- Settings Dropdown -->
@@ -43,6 +49,14 @@
                     <x-slot name="content">
                         <x-dropdown-link :href="route('profile.edit')">
                             {{ __('Profile') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('chinese')">
+                            {{ __('Chinese') }}
+                        </x-dropdown-link>
+
+                        <x-dropdown-link :href="route('english')">
+                            {{ __('English') }}
                         </x-dropdown-link>
 
                         <!-- Authentication -->
@@ -76,6 +90,14 @@
         <div class="pt-2 pb-3 space-y-1">
             <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                 {{ __('Dashboard') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link class="text-red-600" :href="route('chinese')" :active="request()->routeIs('chinese')">
+                {{ __('Chinese') }}
+            </x-responsive-nav-link>
+
+            <x-responsive-nav-link class="text-sky-600" :href="route('english')" :active="request()->routeIs('english')">
+                {{ __('English') }}
             </x-responsive-nav-link>
         </div>
 

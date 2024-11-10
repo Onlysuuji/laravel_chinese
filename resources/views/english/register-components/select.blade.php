@@ -25,10 +25,10 @@
     </div>
 
 
-    <div id="comment_container" class="block sm:flex justify-center items-center text-lg">
+    <div id="select_comment_container" class="block sm:flex justify-center items-center text-lg">
         <p class="sm:w-1/3">解説を入れる(任意):</p>
 
-        <input type="text" class="flex-1 rounded" id="comment" placeholder="解説を入れる">
+        <input type="text" class="flex-1 rounded" id="select_comment" placeholder="解説を入れる">
     </div>
 
     <div id="add_button" class="flex items-center justify-center">
@@ -72,7 +72,7 @@
 
             const containers = document.querySelectorAll('[class*="select_container"]');
             const question = document.getElementById('question_select').value;
-            const comment = document.getElementById('comment').value ?? null;
+            const comment = document.getElementById('select_comment').value;
 
             const answer = document.getElementById('answer').value;
             if (!answer) {

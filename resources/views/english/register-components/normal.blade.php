@@ -110,7 +110,7 @@
         if (allow) {
             console.log("a")
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const comment = document.getElementById('comment').value ?? null;
+            const comment = document.getElementById('comment').value;
 
             const formData = new FormData();
             formData.append('answer', JSON.stringify(data));

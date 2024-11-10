@@ -17,17 +17,18 @@
 
             
             @if ($word->question_type == 'j_to_c' || $word->question_type == 'normal')
-                @include('english.answer-components.normal')
+                @include($language . '.answer-components.normal')
             @elseif ($word->question_type == 'select')
-                @include('english.answer-components.select')
+                @include($language . '.answer-components.select')
             @endif
             <div class="flex items-center justify-around px-5 pt-5">
-                <a href="{{ route('english') }}" class=" p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
+                <a href="{{ route($language)) }}" class=" p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
                 type="submit">次の単語</a>
-                <a href="{{ route('english.modify', ['id' => $id]) }}" class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
+                <a href="{{ route($language . '.modify', ['id' => $id]) }}" class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
                 type="submit">編集する</a>
             </div>
-            <form action="{{ route('english.destroy', $word->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
+            <form action="{{ route($language . '.destroy', $word->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');">
+
                 @csrf
                 @method('DELETE')
                 <div class="flex justify-center mt-7">

@@ -414,7 +414,21 @@
         @if (Route::has('login'))
             <div class="hidden fixed top-0 right-0 px-6 py-4 sm:block">
                 @auth
-                    <p class="text-sm">{{ Auth::user()->name }}</p>
+                    <div class="flex">
+                        <div for="logout" class="text-sm">
+                            {{ Auth::user()->name }}&numsp;&numsp;
+                        </div>
+                        <div>
+                            <form id="logout" method="POST" action="{{ route('logout') }}">
+                                @csrf
+
+                                <button type="submit"
+                                    class="underline text-sm text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 dark:focus:ring-offset-gray-800">
+                                    {{ __('Log Out') }}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
                 @else
                     <a href="{{ route('login') }}" class="text-sm text-gray-700 dark:text-gray-500 underline">Log in</a>
 
@@ -465,11 +479,51 @@
                             </div>
                         </div>
                     </div>
+                    @auth
+                        <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-500">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M6.115 5.19l.319 1.913A6 6 0 008.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 002.288-4.042 1.087 1.087 0 00-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 01-.98-.314l-.295-.295a1.125 1.125 0 010-1.591l.13-.132a1.125 1.125 0 011.3-.21l.603.302a.809.809 0 001.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 001.528-1.732l.146-.292M6.115 5.19A9 9 0 1017.18 4.64M6.115 5.19A8.965 8.965 0 0112 3c1.929 0 3.716.607 5.18 1.64" />
+                                </svg>
+                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white"><a
+                                        href="{{ route('profile.edit') }}"
+                                        class="underline text-gray-900 dark:text-white">プロフィール編集</a></div>
+                            </div>
+
+                            <div class="ml-12">
+                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm w-96 h-14">
+                                    名前、パスワード変更、メール認証、
+                                </div>
+                            </div>
+                        </div>
+                    @else
+                        <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-500">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M6.115 5.19l.319 1.913A6 6 0 008.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 002.288-4.042 1.087 1.087 0 00-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 01-.98-.314l-.295-.295a1.125 1.125 0 010-1.591l.13-.132a1.125 1.125 0 011.3-.21l.603.302a.809.809 0 001.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 001.528-1.732l.146-.292M6.115 5.19A9 9 0 1017.18 4.64M6.115 5.19A8.965 8.965 0 0112 3c1.929 0 3.716.607 5.18 1.64" />
+                                </svg>
+                                <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white"><a
+                                        href="{{ route('login') }}"
+                                        class="underline text-gray-900 dark:text-white">ログイン、またはアカウント作成</a></div>
+                            </div>
+
+                            <div class="ml-12">
+                                <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm w-96 h-14">
+                                    初めての方はアカウント作成を、アカウントをお持ちの方はログインをしてください。
+                                </div>
+                            </div>
+                        </div>
+                    @endauth
 
                     <div class="p-6 border-t border-gray-200 dark:border-gray-700">
                         <div class="flex items-center">
                             <i class="fa-solid fa-graduation-cap"></i>
-                            <div class="ml-4 text-lg leading-7 font-semibold"><a href="https://laravel-news.com/"
+                            <div class="ml-4 text-lg leading-7 font-semibold"><a
+                                    href="https://academicinfo.cloudfree.jp"
                                     class="underline text-gray-900 dark:text-white">学術交流サイト</a></div>
                         </div>
 
@@ -480,31 +534,15 @@
                         </div>
                     </div>
 
-                    <div class="p-6 border-t border-gray-200 dark:border-gray-700 md:border-l">
-                        <div class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                                stroke-width="1.5" stroke="currentColor" class="w-8 h-8 text-gray-500">
-                                <path stroke-linecap="round" stroke-linejoin="round"
-                                    d="M6.115 5.19l.319 1.913A6 6 0 008.11 10.36L9.75 12l-.387.775c-.217.433-.132.956.21 1.298l1.348 1.348c.21.21.329.497.329.795v1.089c0 .426.24.815.622 1.006l.153.076c.433.217.956.132 1.298-.21l.723-.723a8.7 8.7 0 002.288-4.042 1.087 1.087 0 00-.358-1.099l-1.33-1.108c-.251-.21-.582-.299-.905-.245l-1.17.195a1.125 1.125 0 01-.98-.314l-.295-.295a1.125 1.125 0 010-1.591l.13-.132a1.125 1.125 0 011.3-.21l.603.302a.809.809 0 001.086-1.086L14.25 7.5l1.256-.837a4.5 4.5 0 001.528-1.732l.146-.292M6.115 5.19A9 9 0 1017.18 4.64M6.115 5.19A8.965 8.965 0 0112 3c1.929 0 3.716.607 5.18 1.64" />
-                            </svg>
-                            <div class="ml-4 text-lg leading-7 font-semibold text-gray-900 dark:text-white">Coming soon</div>
-                        </div>
-
-                        <div class="ml-12">
-                            <div class="mt-2 text-gray-600 dark:text-gray-400 text-sm w-96 h-14">
-                                Coming soon
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
             <div class="flex justify-center mt-4 sm:items-center sm:justify-between">
                 <div class="text-center text-sm text-gray-500 sm:text-left">
                     <div class="flex items-center">
-                            <i class="fa fa-envelope" aria-hidden="true"></i>
-                             
-                            onlysuuji@outlook.jp
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+
+                        onlysuuji@outlook.jp
 
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="ml-4 -mt-px w-5 h-5 text-gray-400">

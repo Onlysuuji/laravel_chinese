@@ -1,5 +1,5 @@
 
-<x-test2-layout>
+<x-base>
     <x-slot name="title">
         単語
     </x-slot>
@@ -14,4 +14,4 @@
     @elseif ($question_type == 'noWord')
         @include('chinese.chinese-components.chinese-noword')
     @endif
-</x-test2-layout>
+</x-base>

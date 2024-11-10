@@ -1,4 +1,4 @@
-<x-test2-layout>
+<x-base>
     <x-slot name="title">
         答え
     </x-slot>
@@ -40,4 +40,4 @@
         </div>
 
     </div>
-</x-test2-layout>
+</x-base>

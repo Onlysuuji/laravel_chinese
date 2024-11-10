@@ -1,3 +1,8 @@
+@php
+    $language = request()->segment(1);
+    $language = in_array($language, ['english', 'chinese', 'french']) ? $language : 'chinese';
+@endphp
+
 <!DOCTYPE html>
 <html lang="jp">
 
@@ -17,7 +22,7 @@
     <!-- Web Manifest -->
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=0.5">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -33,12 +38,12 @@
     <div class="flex flex-col h-screen">
 
 
-        <nav x-data="{width: windows.location === 'route(`english.wordlist`)' ? 'w-[768px]' : 'w-full'}"
+        <nav x-data="{width: windows.location === 'route($language . '.wordlist')' ? 'w-[768px]' : 'w-full'}"
         :class="width"
             class='flex h-20 justify-between top-0 left-0 shadow-[0_0_64px_0_rgba(0,0,0,0.07)] border-b-4 border-gray-100'>
             <div class="flex justify-between md:gap-10 items-center">
                 <div class="px-5">
-                    <a href="english" class="flex flex-row items-center text-black">
+                    <a href="{{route('home')}}" class="flex flex-row items-center text-black">
                         <span class="mt-1 font-medium">OnlyS</span>
                         <i class="fas fa-home"></i>
 
@@ -60,7 +65,7 @@
                                 </button>
                             </x-slot>
                             <x-slot name="content">
-                                <x-dropdown-link :href="route('english')">
+                                <x-dropdown-link :href="route($language)">
                                     <div class="flex flex-row items-center">
                                         <div class='mr-2 w-9 h-9 flex items-center justify-center'>
                                             <i class="fas fa-pencil-alt"></i>
@@ -71,7 +76,7 @@
                                         </div>
                                     </div>
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('english.register')">
+                                <x-dropdown-link :href="route($language . '.register')">
                                     <div class="flex flex-row items-center">
                                         <div class='mr-2 w-9 h-9 flex items-center justify-center'>
                                             <i class="fas fa-plus"></i>
@@ -81,7 +86,7 @@
                                         </div>
                                     </div>
                                 </x-dropdown-link>
-                                <x-dropdown-link :href="route('english.wordlist', ['page' => 1])">
+                                <x-dropdown-link :href="route($language . '.wordlist')">
                                     <div class="flex flex-row items-center">
                                         <div class='mr-2 w-9 h-9 flex items-center justify-center'>
                                             <i class="fas fa-book"></i>
@@ -180,7 +185,7 @@
 
 
             <div x-data="{ text: '', maxLength: 10 }" class="flex gap-6 items-center py-4 px-3">
-                <a x-model="text" :maxlength="maxLength" href="#"
+                <a x-model="text" :maxlength="maxLength" href="{{route('profile.edit')}}"
                     class="flex flex-col items-center text-black">
                     <i class="fas fa-user text-2xl"></i>
                     <span class="overflow-hidden text-ellipsis whitespace-nowrap mt-1">{{ Auth::user()->name }}</span>
@@ -195,35 +200,6 @@
             {{ $slot }}
         </div>
     </div>
-    <!--<div id="littlemenu" class="absolute z-10 flex flex-col justify-end left-0 bottom-0 w-16 p-3 pb-5">
-        <ul class='space-y-4'>
-
-            <li class=''>
-                <x-tool-icon icon="fas fa-book" tooltip="単語帳を開く">
-
-                </x-tool-icon>
-            </li>
-
-            <li class=''>
-                <x-tool-icon icon="fas fa-edit" tooltip="単語を編集する">
-
-                </x-tool-icon>
-            </li>
-            <li class=''>
-                <x-tool-icon icon="fas fa-trash" color="red" tooltip="単語を削除する">
-
-                </x-tool-icon>
-            </li>
-
-            <li class=''>
-                <x-tool-icon icon="fas fa-plus" tooltip="新しい単語を追加する">
-
-                </x-tool-icon>
-            </li>
-
-        </ul>
-    </div>-->
-
 
 </body>
 

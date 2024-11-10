@@ -17,10 +17,10 @@
         </div>
         <div class=" mt-10 ring-4 ring-gray-200 rounded-lg p-3 pb-8 w-full sm:w-8/12">
             <div x-show="selectedOption === 'normal'" class="flex justify-center">
-                @include('english.register-components.normal')
+                @include($language . '.register-components.normal')
             </div>
             <div x-show="selectedOption === 'select'" class="flex justify-center">
-                @include('english.register-components.select')
+                @include($language . '.register-components.select')
             </div>
         </div>
     </div>

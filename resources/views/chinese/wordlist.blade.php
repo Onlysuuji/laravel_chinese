@@ -1,4 +1,4 @@
-<x-test-layout>
+<x-base>
     <x-slot name="title">
         単語リスト
     </x-slot>
@@ -165,4 +165,4 @@
 
 
 
-</x-test-layout>
+</x-base>

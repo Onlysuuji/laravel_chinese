@@ -1,3 +1,14 @@
+@php
+    $emptyMessage =
+        [
+            'english' => 'No words match your criteria.',
+            'chinese' => '没有符合条件的单词。',
+            'french' => 'Aucun mot ne correspond à vos critères.',
+        ][$language] ?? '条件に合う単語がないです';
+
+    $wordlist_route = route("$language.wordlist");
+@endphp
+
 <x-base>
     <x-slot name="title">
         単語リスト
@@ -58,7 +69,7 @@
                 },
                 generateUrl() {
                     // URLを動的に生成する関数
-                    const baseUrl = `{{ route('english.wordlist') }}`;
+                    const baseUrl = @json($wordlist_route);
                     const queryString =
                         `order=${this.data.order}&search=${this.data.searchKeyword}&sort=${this.data.sort}&category[]= &${this.data.category.map(cat => `category[]=${encodeURIComponent(cat)}`).join('&')}`;
                     return `${baseUrl}?${queryString}`;
@@ -142,29 +153,33 @@
 
 
 
-    <div class=" md:flex md:justify-center">
+    <div class="md:flex md:justify-center">
         <div class="px-10 w-[755px] md:w-[1200px]">
             <div
                 class="block md:w-full border-4 border-black ring-2 ring-black ring-offset-2 ring-offset-rose-800 text-sm">
-                @php
-                    $language = request()->segment(1);
-                    $routeName = in_array($language, ['english', 'chinese', 'french']) ? $language : 'chinese';
-                @endphp
+
+
                 @forelse ($words as $word)
                     @if ($word->question_type === 'normal')
                         <div class="m-1 flex flex-col items-center bg-yellow-200 rounded">
-                            @include('english.wordlist-components.normal')
-                        @elseif($word->question_type === 'select')
-                            <div class="m-1 flex flex-col items-center bg-sky-200 rounded">
-                                @include('english.wordlist-components.select')
+                            @include($language . ".wordlist-components.normal")
+                        </div>
+                    @elseif($word->question_type === 'select')
+                        <div class="m-1 flex flex-col items-center bg-sky-200 rounded">
+                            @include($language . ".wordlist-components.select")
+                        </div>
                     @endif
+                @empty
+                    <p class="text-center">{{ $emptyMessage }}</p>
+                @endforelse
+
+                @if ($words->count() > 0)
+                    <div class="mt-4">
+                        {{ $words->appends(['sort' => $sort, 'order' => $order])->links() }}
+                    </div>
+                @endif
             </div>
-        @empty
-            <p class="text-center">条件に合う単語がないです</p>
-            @endforelse
-            {{ $words->appends(['sort' => $sort, 'order' => $order])->links() }}
         </div>
-    </div>
     </div>
     <!-- ページネーションリンクの表示 -->
 

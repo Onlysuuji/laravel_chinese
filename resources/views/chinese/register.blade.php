@@ -1,4 +1,4 @@
-<x-test2-layout>
+<x-base>
     <x-slot name="title">
         単語登録
     </x-slot>
@@ -26,4 +26,4 @@
     </div>
 
 
-</x-test2-layout>
+</x-base>
