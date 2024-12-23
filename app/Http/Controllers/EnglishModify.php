@@ -45,7 +45,9 @@ class EnglishModify extends Controller
                 $word->choices = $request->input('choices');
                 $word->question_answer = $request->input('question_answer');
             }
-            $word->comment = $request->input('comment');
+            if ($request->has('comment')) { // 'comment' がリクエストに存在している場合のみ
+                $word->comment = $request->input('comment');
+            }
 
 
 

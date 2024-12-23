@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\English;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Auth;
 
@@ -20,19 +21,21 @@ class EnglishRegister extends Controller
 
 
         try {
-
+            $userId = Auth::id();
+            $user = User::find($userId);
             $question_type = $request->input('question_type');
             $add = new English;
-            $add->user_id = Auth::id();
+            $add->user_id = $userId;
             $add->question = $request->input('question');
             $add->question_type = $question_type;
+            $add->loop = $user->loop;
             if ($question_type == 'normal') {
                 $add->answer = $request->input('answer');
             } elseif ($question_type == 'select') {
                 $add->choices = $request->input('choices');
                 $add->question_answer = $request->input('question_answer');
             }
-            $add->comment = $request->input('comment')??null;
+            $add->comment = $request->input('comment') ?? null;
 
             $add->save();
 

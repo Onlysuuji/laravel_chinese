@@ -2,51 +2,89 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\geminiTest;
 use App\Models\English;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use App\Helpers\GeminiHelper;
+use App\Models\User;
 
 class EnglishController extends Controller
 {
+
+    protected $service;
+
+    public function __construct(geminiTest $service)
+    {
+        $this->service = $service;
+    }
+
     public function showWord(Request $request)
     {
         // 現在の時刻に基づいて単語を取得
         $userId = Auth::id();
+        $user = User::find($userId); // ユーザー情報を取得
+        $userLoop = $user->loop;
+        if(!English::where('user_id',$userId)->first()){
+            $question_type = 'noWord';
+            return view('english.english',compact('question_type'));
+        }
         $word = English::where('user_id', $userId)
-            ->where('created_at', '=', 'nextreview_at')
-            ->orderBy('nextreview_at', 'asc')
+            ->where('loop', $userLoop)
+            ->inRandomOrder() // ランダムな順序に並び替え
             ->first();
 
-        if (!$word) {
-            $word = English::where('user_id', $userId)
-                ->where('nextreview_at', '<', Carbon::now())
-                ->orderBy('nextreview_at', 'asc')
-                ->first();
-            
-        }
+        while (!$word) {
+            $userLoop++;
+            // 最新のloop値を取得
+            $userLoop = User::where('id', $userId)->value('loop');
 
-        $question_type = $word->question_type ?? 'noWord';;
+            // 条件に合致するwordを検索
+            $word = English::where('user_id', $userId)
+                ->where('loop', $userLoop)
+                ->inRandomOrder() // ランダムな順序に並び替え
+                ->first();
+        }
+        
+        $user->loop=$userLoop;
+        $user->save();
+
+
+        $question_type = $word->question_type ?? 'noWord';
         if ($question_type === 'noWord') {
             return view('english/english', compact('question_type'));
         }
 
         // 初期設定など
         session(['starttime' => time()]);
-        
-        if($question_type == 'normal') {
-            return view('english/english', compact('word','question_type'));
-        }
-        else if($question_type == 'select'){
+
+        if ($question_type == 'normal') {
+            // JSONをデコード
+            $decodedAnswer = json_decode($word->answer, true);
+
+            // 配列から値を取得
+            $answer = $decodedAnswer['english'][0];
+
+            // API呼び出し
+            $content = GeminiHelper::phpfetchFromGemini("指定された英単語に適した説明をその英単語の文字を入れないで日本語で作成してください。$answer");
+            $example = GeminiHelper::phpfetchFromGemini("指定された英単語を使用する1行程度の英文を作って出力してください。$answer");
+            $exampleanswer = GeminiHelper::phpfetchFromGemini("次の文を日本語に翻訳してそれを出力してください。$example");
+
+
+            // セッションに保存
+            Session::put('example', $example);
+            Session::put('exampleanswer', $exampleanswer);
+
+            // ビューへ渡す
+            return view('english/english', compact('word', 'question_type', 'content', 'exampleanswer'));
+        } else if ($question_type == 'select') {
 
             session(['seed' => time()]);
             $choices = json_decode($word->choices, true);
             $choices['option'][] = $word->question_answer;
             return view('english/english', compact('word', 'question_type', 'choices'));
-
-        }
-        else{
-
         }
     }
 }

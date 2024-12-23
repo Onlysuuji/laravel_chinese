@@ -16,8 +16,12 @@ return new class extends Migration
         Schema::create('english', function (Blueprint $table) {
             $table->id(); // bigint(20), AUTO_INCREMENT
             $table->unsignedBigInteger('user_id'); // bigint(20), FOREIGN KEY
-            $table->timestamps(); // created_at, updated_at
-            $table->timestamp('nextreview_at')->nullable()->useCurrent(); // TIMESTAMP, DEFAULT current_timestamp()
+            
+            // created_at, updated_at with CURRENT_TIMESTAMP default
+            $table->timestamp('created_at')->useCurrent(); // TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
+            $table->timestamp('updated_at')->useCurrent()->useCurrentOnUpdate(); // TIMESTAMP, DEFAULT CURRENT_TIMESTAMP, ON UPDATE CURRENT_TIMESTAMP
+            
+            $table->timestamp('nextreview_at')->nullable()->useCurrent(); // TIMESTAMP, DEFAULT CURRENT_TIMESTAMP
             $table->integer('rank')->default(0); // int(11), DEFAULT 0
             $table->string('question', 100); // varchar(100)
             $table->text('answer'); // longtext
@@ -30,6 +34,7 @@ return new class extends Migration
             // Foreign key constraint
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
+        
     }
 
     /**

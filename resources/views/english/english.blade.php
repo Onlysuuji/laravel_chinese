@@ -1,4 +1,3 @@
-
 <x-base>
     <x-slot name="title">
         単語

@@ -16,7 +16,8 @@
         <div id="comment_container" class="block sm:flex justify-center items-center text-lg">
             <p class="sm:w-1/3">解説を入れる(任意):</p>
 
-            <input type="text" class="flex-1 rounded" id="comment" value={{$word->comment}} placeholder="解説を入れる">
+            <input type="text" class="flex-1 rounded" id="comment" value="{{ $word->comment }}"
+                placeholder="解説を入れる">
         </div>
         <div id="add_button" class="flex items-center justify-center">
             <button class="bg-blue-100 text-blue-500 px-7 py-3 mx-5 rounded" id="addNormal">別解を追加</button>
@@ -113,7 +114,11 @@
             formData.append('answer', JSON.stringify(data));
             formData.append('question', question);
             formData.append('question_type', 'normal');
-            formData.append('comment', comment);
+            if (comment) {
+                formData.append('comment', comment);
+            } else{
+                formData.append('comment','');
+            }
             formData.forEach((value, key) => {
                 console.log(`${key}: ${value}`);
             });

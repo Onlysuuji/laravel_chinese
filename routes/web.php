@@ -1,5 +1,7 @@
 <?php
 
+use App\Helpers\GeminiHelper;
+use App\Helpers\OpenAiHelper;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChineseController;
@@ -15,6 +17,9 @@ use App\Http\Controllers\EnglishModify;
 use App\Http\Controllers\EnglishAnswer;
 use App\Http\Controllers\EnglishController;
 use App\Http\Controllers\EnglishDelete;
+use App\Http\Controllers\EnglishPackage;
+use App\Http\Controllers\EnglishCorrect;
+use App\Http\Controllers\EnglishRemember;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +40,8 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::post('/call-gemini', [GeminiHelper::class, 'fetchFromGemini'])->name('gemini');
+Route::post('/call-openai', [OpenAiHelper::class, 'fetchFromOpenAi'])->name('openai');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -52,6 +59,12 @@ Route::middleware('auth')->group(function () {
         Route::post('/modify', [EnglishModify::class, 'modifyWord'])->name('english.modifyWord');
         Route::get('/wordlist', [EnglishWordlist::class, 'wordlist'])->name('english.wordlist');
         Route::delete('/delete/{id}', [EnglishDelete::class, 'destroy'])->name('english.destroy');
+        Route::get('/package', [EnglishPackage::class, 'showList'])->name('english.package');
+        Route::post('/package/install', [EnglishPackage::class, 'installPackage'])->name('english.package.install');
+        Route::post('/package/enable', [EnglishPackage::class, 'enable'])->name('english.package.enable');
+        Route::post('/package/disable', [EnglishPackage::class, 'disable'])->name('english.package.disable');
+        Route::patch('/remember/{id}', [EnglishRemember::class, 'rememberWord'])->name('english.remember');
+        Route::patch('/correct/{id}', [EnglishCorrect::class, 'changeToCorrect'])->name('english.correct');
     });
 
 
@@ -68,6 +81,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/wordlist', [WordListController::class, 'wordlist'])->name('chinese.wordlist');
         Route::delete('/delete/{id}', [DeleteController::class, 'destroy'])->name('chinese.destroy');
     });
+
+
 });
 
 require __DIR__ . '/auth.php';

@@ -6,6 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\English;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use App\Helpers\GeminiHelper;
+use Illuminate\Support\Facades\Log;
 
 class EnglishAnswer extends Controller
 {
@@ -29,7 +32,7 @@ class EnglishAnswer extends Controller
                 $answer = json_decode($word->answer, true);
                 if (!empty($yourenglish)) {
                     for ($i = 0; $i < count($answer['english']); $i++) {
-                        if ($answer['english'][$i] === $yourenglish) {
+                        if (strcasecmp($answer['english'][$i], $yourenglish) === 0) {
                             $isCorrect = true;
                             break;
                         }
@@ -58,14 +61,23 @@ class EnglishAnswer extends Controller
                 // $nextreview_atをY-m-d H:i:s形式にフォーマット
                 $nextreview_at = $temporary_nextreview_at->format('Y-m-d H:i:s');
 
-                $word->update([
-                    'reviewd_at' => now(),
-                    'nextreview_at' => $nextreview_at,
-                    'rank' => $rank,
-                    'thinkingTime' => $thinkingTime,
-                ]);
 
-                return redirect()->route('english.showanswer', ['id' => $word->id, 'yourenglish' => $yourenglish ?? NULL, 'isCorrect' => $isCorrect]);
+                $wordLoop = $word->loop;
+                Log::debug('Debug message: ' . $wordLoop);
+                $wordLoop = $word->loop;
+                if ($isCorrect === true) {
+                    $wordLoop += (3) * exp(-$thinkingTime / 40) + 1;
+                }
+                $wordLoop++;
+                $word->loop = $wordLoop;
+                Log::debug('Debug message: ' . $word->loop);
+                $word->thinkingTime = $thinkingTime;
+                $word->save();
+                $id = $word->id;
+
+                Session::put('answer_to_ai', $request->input('answer_to_ai', NULL));
+
+                return redirect()->route('english.showanswer', compact('id', 'yourenglish', 'isCorrect'));
             } else if ($question_type == 'select') {
                 $rank = $word->rank;
                 $thinkingTime = time() - session('starttime');
@@ -87,13 +99,21 @@ class EnglishAnswer extends Controller
                     $temporary_nextreview_at->addHours($f); // Ensure correct syntax for modifying date
                 }
 
+
+                $wordLoop = $word->loop;
+                if ($isCorrect === true) {
+                    $wordLoop += ($wordLoop + 2) * exp(-$thinkingTime / 40) + 1;
+                }
+                $wordLoop++;
+
+
                 $nextreview_at = $temporary_nextreview_at->format('Y-m-d H:i:s');
 
                 $word->update([
-                    'reviewd_at' => now(),
                     'nextreview_at' => $nextreview_at,
                     'rank' => $rank,
                     'thinkingTime' => $thinkingTime,
+                    'loop' => 4,
                 ]);
 
                 return redirect()->route('english.showanswer', ['id' => $word->id,  'isCorrect' => $isCorrect, 'your_answer' => $request->your_answer]);
@@ -112,6 +132,8 @@ class EnglishAnswer extends Controller
 
     public function showAnswer(Request $request)
     {
+
+
         $request->session()->put('previous_url', $request->fullUrl());
 
         $id = $request->query('id') ?? NULL;
@@ -120,22 +142,49 @@ class EnglishAnswer extends Controller
             ->where('user_id', Auth::id())
             ->firstOrFail();
 
+        $yourenglish = $request->query('yourenglish');
+        $answerData = json_decode($word->answer, true);
+
+
+
+
 
         // レコードが見つからなかった場合の処理
         if (!$word) {
             return redirect()->back()->withErrors(['error' => 'レコードが見つかりませんでした。']);
         }
+        $englishWord = $answerData['english'][0];
         $isCorrect = $request->query('isCorrect');
+        if ($isCorrect) {
+            $content = "「{$englishWord}」という英単語を日本語で解説してください。";
+        } elseif (isset($yourenglish) && isset($answerData['english'][0])) {
+
+            $content = "「{$englishWord}」と「{$yourenglish}」の違いを日本語で説明してください。";
+        } elseif (!isset($yourenglish)) {
+            // デフォルトメッセージ
+            $content = "「{$englishWord}」という英単語を日本語で解説してください。";
+        }
+
 
 
         if ($word->question_type == 'normal') {
-            $yourenglish = $request->query('yourenglish', 'N/A'); // デフォルト値を'N/A'に設定
-            return view('english.answer', compact('id', 'word', 'yourenglish', 'isCorrect'));
+            // セッションからデータを取得
+            $example = Session::get('example');
+            $exampleanswer = Session::get('exampleanswer');
+            $answer_to_ai = Session::get('answer_to_ai');
+            if ($answer_to_ai) {
+                $ai_example = "「{$answer_to_ai}」が「{$exampleanswer}」の英訳となるように間違っていたら修正し、日本語で解説してください。";
+            } else {
+                $ai_example = "「{$exampleanswer}」という英文の文構造を日本語で解説してください。";
+            }
+
+            $yourenglish = $request->query('yourenglish', NULL); // デフォルト値を'N/A'に設定
+            return view('english.answer', compact('id', 'word', 'yourenglish', 'isCorrect', 'content', 'example', 'exampleanswer', 'ai_example'));
         } elseif ($word->question_type == 'select') {
-            $your_answer = $request->query('your_answer', null);
+            $your_answer = $request->query('your_answer', NULL);
             $choices = json_decode($word->choices, true);
             $choices['option'][] = $word->question_answer;
-            return view('english.answer', compact('id', 'choices', 'word', 'your_answer', 'isCorrect'));
+            return view('english.answer', compact('id', 'choices', 'word', 'your_answer', 'isCorrect', 'content'));
         }
     }
 }

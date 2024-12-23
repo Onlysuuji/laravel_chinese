@@ -1,0 +1,26 @@
+let output = '';
+
+for (let i = 2; i <= 1649; i++) {
+    let englishSelector = `/html/body/div[2]/div[2]/div[8]/table/tbody/tr[${i}]/td[3]/div`;
+    let japaneseSelector = `/html/body/div[2]/div[2]/div[8]/table/tbody/tr[${i}]/td[4]/div`;
+
+    let englishElement = document.evaluate(englishSelector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    let japaneseElement = document.evaluate(japaneseSelector, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+
+    if (englishElement && japaneseElement) {
+        let englishText = englishElement.innerText.trim();
+        let japaneseText = japaneseElement.innerText.trim();
+
+        // PHP配列形式の文字列を生成
+        output += `[
+            'user_id' => $this->userId,
+            'question' => '${japaneseText}',
+            'question_type' => 'normal',
+            'answer' => json_encode([
+                'english' => ['${englishText}']
+            ]),
+        ],\n`;
+    }
+}
+
+console.log(`[\n${output}]`);

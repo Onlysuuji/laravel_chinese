@@ -23,6 +23,11 @@
     <link rel="manifest" href="{{ asset('site.webmanifest') }}">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        if (window.location.href === '{{ route($language . ".wordlist") }}') {
+            document.querySelector('meta[name="viewport"]').setAttribute('content', 'width=device-width, initial-scale=0.5');
+        }
+    </script>
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -38,18 +43,17 @@
     <div class="flex flex-col h-screen">
 
 
-        <nav x-data="{width: windows.location === 'route($language . '.wordlist')' ? 'w-[768px]' : 'w-full'}"
-        :class="width"
-            class='flex h-20 justify-between top-0 left-0 shadow-[0_0_64px_0_rgba(0,0,0,0.07)] border-b-4 border-gray-100'>
+        <nav x-data="{ width: (window.location.href === '{{ route($language . '.wordlist') }}') ? 'w-[768px]' : 'w-full' }"
+            class="flex h-20 justify-between top-0 left-0 shadow-[0_0_64px_0_rgba(0,0,0,0.07)] border-b-4 border-gray-100">
             <div class="flex justify-between md:gap-10 items-center">
                 <div class="px-5">
-                    <a href="{{route('home')}}" class="flex flex-row items-center text-black">
+                    <a href="{{ route('home') }}" class="flex flex-row items-center text-black">
                         <span class="mt-1 font-medium">OnlyS</span>
                         <i class="fas fa-home"></i>
 
                     </a>
                 </div>
-                <div class="flex flex-row gap-3 px-3 text-xl">
+                <div class="flex flex-row gap-3 text-sm md:text-lg">
                     <x-dropdown align="left">
                         <button @click = "open-stopwatch = ! open-stopwatch"
                             class="flex flex-row items-center text-black">
@@ -137,6 +141,45 @@
                             </x-slot>
                         </button>
                     </x-dropdown>
+                    <x-dropdown align="left">
+                        <button @click = "open-stopwatch = ! open-stopwatch"
+                            class="flex flex-row items-center text-black">
+                            <x-slot name="trigger">
+                                <button class="flex flex-row items-center">
+                                    <span class="mt-1 font-medium">単語パック</span>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg" class="icon-md text-token-text-tertiary">
+                                        <path fill-rule="evenodd" clip-rule="evenodd"
+                                            d="M5.29289 9.29289C5.68342 8.90237 6.31658 8.90237 6.70711 9.29289L12 14.5858L17.2929 9.29289C17.6834 8.90237 18.3166 8.90237 18.7071 9.29289C19.0976 9.68342 19.0976 10.3166 18.7071 10.7071L12.7071 16.7071C12.5196 16.8946 12.2652 17 12 17C11.7348 17 11.4804 16.8946 11.2929 16.7071L5.29289 10.7071C4.90237 10.3166 4.90237 9.68342 5.29289 9.29289Z"
+                                            fill="currentColor"></path>
+                                    </svg>
+                                </button>
+                            </x-slot>
+                            <x-slot name="content">
+                                <x-dropdown-link :href="route('english.package')">
+                                    <div class="flex flex-row items-center">
+                                        <div class=' overflow-hidden text-ellipsis whitespace-nowrap '>
+                                            {{ __('パックリスト') }}
+                                        </div>
+                                    </div>
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('english.package')">
+                                    <div class="flex flex-row items-center">
+                                        <div class=' overflow-hidden text-ellipsis whitespace-nowrap '>
+                                            {{ __('TOEIC') }}
+                                        </div>
+                                    </div>
+                                </x-dropdown-link>
+                                <x-dropdown-link :href="route('english.package')">
+                                    <div class="flex flex-row items-center">
+                                        <div class=' overflow-hidden text-ellipsis whitespace-nowrap '>
+                                            {{ __('英検') }}
+                                        </div>
+                                    </div>
+                                </x-dropdown-link>
+                            </x-slot>
+                        </button>
+                    </x-dropdown>
                     {{-- アラーム --}}
                     <x-dropdown align="right" width="64">
                         <button @click = "open-stopwatch = ! open-stopwatch"
@@ -185,7 +228,7 @@
 
 
             <div x-data="{ text: '', maxLength: 10 }" class="flex gap-6 items-center py-4 px-3">
-                <a x-model="text" :maxlength="maxLength" href="{{route('profile.edit')}}"
+                <a x-model="text" :maxlength="maxLength" href="{{ route('profile.edit') }}"
                     class="flex flex-col items-center text-black">
                     <i class="fas fa-user text-2xl"></i>
                     <span class="overflow-hidden text-ellipsis whitespace-nowrap mt-1">{{ Auth::user()->name }}</span>

@@ -1,4 +1,5 @@
 <x-base>
+
     <x-slot name="title">
         単語リスト
     </x-slot>
@@ -66,7 +67,7 @@
             };
         }
     </script>
-
+    
     <div class="flex flex-col justify-center items-center gap-y-6 my-4 w-[755px] md:w-full" x-data="getData()">
         <div class="space-y-2">
             <div class="space-x-4 flex justify-center">
@@ -152,10 +153,10 @@
                 @endphp
                 @forelse ($words as $word)
                     @if ($word->question_type === 'normal')
-                        <div class="m-1 flex flex-col items-center bg-yellow-200 rounded">
+                        <div class="m-1 flex flex-col items-center bg-yellow-100 rounded">
                             @include('english.wordlist-components.normal')
                         @elseif($word->question_type === 'select')
-                            <div class="m-1 flex flex-col items-center bg-sky-200 rounded">
+                            <div class="m-1 flex flex-col items-center bg-sky-100 rounded">
                                 @include('english.wordlist-components.select')
                     @endif
             </div>
