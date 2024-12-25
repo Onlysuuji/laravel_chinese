@@ -11,16 +11,7 @@ class OpenAiHelper
 {
 
     // Node.js APIを呼び出す共通関数
-    public static function phpfetchFromOpenAi($prompt)
-    {
-        $response = Http::get('http://localhost:3000/api/openai', [
-            'prompt' => $prompt
-        ]);
-
-        return $response->json()['response'] ?? 'エラーが発生しました';
-    }
-    // Node.js APIを呼び出す共通関数
-    public static function fetchFromOpenAi(Request $request)
+    public static function fetchFromOpenAi(Request $request,$para)
     {
         try {
             $prompt = $request->input('prompt'); // リクエストからプロンプトを取得
@@ -29,9 +20,11 @@ class OpenAiHelper
                 'prompt' => $prompt,
             ]);
 
-            // API応答を返す
-            return $response;
+            // content部分を取得
+            $content = $response->json()['content'] ?? '応答がありません';
 
+            // AIのcontent部分を返す
+            return response()->json(['content' => $content]);
         } catch (Exception $e) {
             // エラーが発生した場合にログ出力とエラーメッセージを返す
             Log::error('OpenAi API 呼び出しエラー: ' . $e->getMessage());

@@ -11,9 +11,9 @@
     <div class="flex flex-col items-center space-y-5">
         <p class="w-full text-2xl bg-gray-100 rounded">問題の答え</p>
         <div id="solution_containers" class="w-5/6 rounded"></div>
-        <div x-data="{ open: false }" class="w-5/6 sm:hidden">
+        <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-28 hover:bg-blue-100 transition duration-100 flex justify-around items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-28 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>解説を表示</div>
             </button>
@@ -49,9 +49,9 @@
 
             <div id="ai_exampleanswer_sound" style="cursor: pointer;"><i class="fas fa-volume-up"></i></div>
         </div>
-        <div x-data="{ open: false }" class="w-5/6 sm:hidden">
+        <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-28 hover:bg-blue-100 transition duration-100 flex justify-around items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-28 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>解説を表示</div>
             </button>

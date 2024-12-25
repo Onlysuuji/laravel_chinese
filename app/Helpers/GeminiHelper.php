@@ -31,7 +31,23 @@ class GeminiHelper
 
             // API応答を返す
             return $response;
+        } catch (Exception $e) {
+            // エラーが発生した場合にログ出力とエラーメッセージを返す
+            Log::error('Gemini API 呼び出しエラー: ' . $e->getMessage());
+            return 'APIエラーが発生しました。';
+        }
+    }
+    public static function gemini(Request $request)
+    {
+        try {
+            $prompt = $request->input('prompt'); // リクエストからプロンプトを取得
 
+            $response = Http::get('http://localhost:3000/api/gemini', [
+                'prompt' => $prompt,
+            ]);
+
+            // API応答を返す
+            return $response;
         } catch (Exception $e) {
             // エラーが発生した場合にログ出力とエラーメッセージを返す
             Log::error('Gemini API 呼び出しエラー: ' . $e->getMessage());

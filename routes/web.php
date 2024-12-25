@@ -41,7 +41,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::post('/call-gemini', [GeminiHelper::class, 'fetchFromGemini'])->name('gemini');
-Route::post('/call-openai', [OpenAiHelper::class, 'fetchFromOpenAi'])->name('openai');
+Route::post('/call-openai/{param}', [OpenAiHelper::class, 'fetchFromOpenAi'])->name('openai');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

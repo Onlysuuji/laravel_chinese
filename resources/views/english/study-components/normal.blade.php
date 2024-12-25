@@ -7,7 +7,13 @@
         <input type="hidden" name="id" value="{{ $word->id }}">
 
         <div class="text-center px-20 py-2 text-2xl space-y-6">
-            <p class="text-3xl ">読み方を答えよ</p>
+            <p class="text-3xl ">
+                @if (isset($count) && $count > 0)
+                    {{ $count }}個学習した
+                @else
+                    読み方を答えよ
+                @endif
+            </p>
             <p>{{ $word->question }}</p>
             <p id='ai_answer' class="text-sm">{{ $content }}</p>
             <p class="mt-10">例題</p>
@@ -30,7 +36,8 @@
         </div>
 
     </form>
-    <form action="{{ route('english.destroy', $word->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');" class="mt-6">
+    <form action="{{ route('english.destroy', $word->id) }}" method="POST" onsubmit="return confirm('本当に削除しますか？');"
+        class="mt-6">
         @csrf
         @method('DELETE')
         <div class="flex justify-center">

@@ -18,4 +18,7 @@ export default defineConfig({
             host: 'localhost',
         },
     },
+    preview: {
+        open: 'Brave', // Braveで開く
+      },
 });

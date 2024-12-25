@@ -50,17 +50,7 @@ class EnglishAnswer extends Controller
                     $errors['rank'] = "ランク設定でエラー";
                 }
 
-                $temporary_nextreview_at = Carbon::now();
-
-                if ($rank == 0) {
-                    $temporary_nextreview_at->addMinutes(30);
-                } else {
-                    $f = floor(24 * exp(($rank - 1) / 1.4));
-                    $temporary_nextreview_at->addHours($f); // Ensure correct syntax for modifying date
-                }
-                // $nextreview_atをY-m-d H:i:s形式にフォーマット
-                $nextreview_at = $temporary_nextreview_at->format('Y-m-d H:i:s');
-
+                $word->nextreview_at = Carbon::today();
 
                 $wordLoop = $word->loop;
                 Log::debug('Debug message: ' . $wordLoop);
@@ -173,7 +163,7 @@ class EnglishAnswer extends Controller
             $exampleanswer = Session::get('exampleanswer');
             $answer_to_ai = Session::get('answer_to_ai');
             if ($answer_to_ai) {
-                $ai_example = "「{$answer_to_ai}」が「{$exampleanswer}」の英訳となるように間違っていたら修正し、日本語で解説してください。";
+                $ai_example = "「{$answer_to_ai}」は「{$exampleanswer}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。";
             } else {
                 $ai_example = "「{$exampleanswer}」という英文の文構造を日本語で解説してください。";
             }

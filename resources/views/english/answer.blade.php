@@ -3,9 +3,9 @@
         答え
     </x-slot>
     <!-- 問題文 -->
-    <div class="block sm:flex justify-center py-3">
+    <div class="block md:flex justify-center py-3">
 
-        <div class="sm:w-4/12 hidden pl-7 pr-4 md:flex flex-col items-center">
+        <div class="md:w-3/12 hidden pl-7 pr-4 flex-col items-center">
             <div class="my-5">
                 <h2>AIの例題の解説</h2>
             </div>
@@ -14,7 +14,7 @@
             </div>
 
         </div>
-        <div class="sm:w-4/12 text-center flex flex-col">
+        <div class="md:w-6/12 text-center flex flex-col">
             @if ($isCorrect == true)
                 <div class="py-5 w-[100%] text-green-600 font-semibold text-3xl rounded text-center">
                     正解</div>
@@ -22,6 +22,20 @@
                 <div class="py-5 w-[100%] text-red-400 font-semibold text-3xl rounded text-center">
                     不正解</div>
             @endif
+            <script type="module">
+                import OpenAI from 'openai';
+                const client = new OpenAI();
+
+                const response = await client.chat.completions.create({
+                    messages: [{
+                        role: 'user',
+                        content: 'Say this is a test'
+                    }],
+                    model: 'gpt-4o-mini'
+                });
+
+                console.log(response._request_id);
+            </script>
 
 
             @if ($word->question_type == 'j_to_c' || $word->question_type == 'normal')
@@ -41,8 +55,8 @@
                 <form action="{{ route('english.correct', ['id' => $id]) }}" method="POST">
                     @csrf
                     @method('PATCH')
-                        <button type="submit"
-                            class="p-3 flex items-center bg-blue-50 hover:bg-blue-100 text-gray-600  duration-100 rounded">正解にする</button>
+                    <button type="submit"
+                        class="p-3 flex items-center bg-blue-50 hover:bg-blue-100 text-gray-600  duration-100 rounded">正解にする</button>
                 </form>
                 <a href="{{ route('english.modify', ['id' => $id]) }}"
                     class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded" type="submit">編集する</a>
@@ -78,7 +92,7 @@
             </script>
 
         </div>
-        <div class="hidden sm:w-4/12 pl-7 pr-4 md:flex flex-col items-center">
+        <div class="hidden md:w-3/12 pl-7 pr-4  flex-col items-center">
             <div class="my-5">
                 <h2>Geminiの回答:</h2>
             </div>
@@ -128,5 +142,47 @@
                 $('#ai_answer_sm').html(ai_answer);
                 $('#ai_example_sm').html(ai_example);
             })();
+        async function callOpenai(prompt) {
+            try {
+                const response = await fetch('/call-openai', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute(
+                            'content') // Laravel用
+                    },
+                    body: JSON.stringify({
+                        prompt
+                    }) // JSON形式で送信
+                });
+
+                if (!response.ok) {
+                    throw new Error('ネットワークエラーが発生しました');
+                }
+
+                const data = await response.json();
+                return data.content; // サーバーからの応答（AIのcontent部分）を返す
+            } catch (error) {
+                console.error('エラー:', error.message);
+                return ''; // エラー時は空文字を返す
+            }
+        }
+
+        (async () => {
+            // Bladeで埋め込んだデータを利用
+            const aiExample = @json($ai_example); // JSONデータ
+            const aiContent = @json($content); // JSONデータ
+            // OpenAI APIの呼び出し
+            const aiExampleResponse = await callOpenai(aiExample);
+            const aiContentResponse = await callOpenai(aiContent);
+
+            // **で囲まれた部分を<strong>タグに変換
+            const formattedAiExample = aiExampleResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const formattedAiContent = aiContentResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+
+            // コンソールに表示
+            console.log('AI Example Response (formatted):', formattedAiExample);
+            console.log('AI Content Response (formatted):', formattedAiContent);
+        })();
     </script>
 </x-base>

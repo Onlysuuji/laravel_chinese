@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import express from "express";
+import OpenAI from "openai";
 
 dotenv.config();
 
@@ -10,7 +11,9 @@ const PORT = 3000;
 // OpenAI APIの設定
 const genAI = new GoogleGenerativeAI(process.env.GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
 // Gemini APIエンドポイント
 app.get("/api/gemini", async (req, res) => {
   try {
@@ -26,28 +29,22 @@ app.get("/api/gemini", async (req, res) => {
 
 // OpenAi APIエンドポイント
 app.get("/api/openai", async (req, res) => {
+  // クエリパラメータからプロンプトを取得し、配列に変換
+  const prompt = req.query.prompt || "are you chatgpt?";
+  const messages = [{ role: "user", content: prompt }];
+
   try {
-    const prompt = req.query.prompt || "Explain how AI works";
-
-    const stream = await openai.chat.completions.create({
-      model: "gpt-4o-mini",
-      messages: [{ role: "user", content: prompt }],
-      stream: true,
+    // OpenAI APIリクエスト
+    const response = await client.chat.completions.create({
+      model: "gpt-4o-mini", // モデル名
+      messages: messages // メッセージ配列を渡す
     });
-
-    let responseText = "";
-    for await (const chunk of stream) {
-      const content = chunk.choices[0]?.delta?.content;
-      if (content) {
-        responseText += content;
-      }
-    }
-
-    res.json({ success: true, response: responseText });
+    // content部分だけを抽出
+    const aiContent = response.choices[0].message.content;
+    res.json({ content: aiContent }); // contentだけを返す
   } catch (error) {
-    console.error("Error in OpenAI API request:", error);
-    // エラーをクライアントに送信
-    res.status(500).json({ success: false, message: error.message });
+    // エラー発生時の処理
+    res.status(500).json({ error: error.message });
   }
 });
 

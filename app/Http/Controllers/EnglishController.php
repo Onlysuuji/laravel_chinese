@@ -27,9 +27,9 @@ class EnglishController extends Controller
         $userId = Auth::id();
         $user = User::find($userId); // ユーザー情報を取得
         $userLoop = $user->loop;
-        if(!English::where('user_id',$userId)->first()){
+        if (!English::where('user_id', $userId)->first()) {
             $question_type = 'noWord';
-            return view('english.english',compact('question_type'));
+            return view('english.english', compact('question_type'));
         }
         $word = English::where('user_id', $userId)
             ->where('loop', $userLoop)
@@ -47,8 +47,8 @@ class EnglishController extends Controller
                 ->inRandomOrder() // ランダムな順序に並び替え
                 ->first();
         }
-        
-        $user->loop=$userLoop;
+
+        $user->loop = $userLoop;
         $user->save();
 
 
@@ -66,7 +66,13 @@ class EnglishController extends Controller
 
             // 配列から値を取得
             $answer = $decodedAnswer['english'][0];
+            // 今日の日付を取得
+            $today = Carbon::today();
 
+            // 今日の日付と一致するレコードを取得してカウント
+            $count = English::where('user_id', $userId)
+                ->whereDate('nextreview_at', $today)
+                ->count();
             // API呼び出し
             $content = GeminiHelper::phpfetchFromGemini("指定された英単語に適した説明をその英単語の文字を入れないで日本語で作成してください。$answer");
             $example = GeminiHelper::phpfetchFromGemini("指定された英単語を使用する1行程度の英文を作って出力してください。$answer");
@@ -78,7 +84,7 @@ class EnglishController extends Controller
             Session::put('exampleanswer', $exampleanswer);
 
             // ビューへ渡す
-            return view('english/english', compact('word', 'question_type', 'content', 'exampleanswer'));
+            return view('english/english', compact('word', 'question_type', 'content', 'exampleanswer','count'));
         } else if ($question_type == 'select') {
 
             session(['seed' => time()]);
