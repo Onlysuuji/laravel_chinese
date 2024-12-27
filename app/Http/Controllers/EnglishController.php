@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Helpers\GeminiHelper;
+use App\Helpers\OpenAiHelper;
 use App\Models\User;
 
 class EnglishController extends Controller
@@ -26,6 +27,22 @@ class EnglishController extends Controller
         // 現在の時刻に基づいて単語を取得
         $userId = Auth::id();
         $user = User::find($userId); // ユーザー情報を取得
+        $id = Session::get('id') ?? null;
+        if ($id) {
+            $word = English::where('user_id', $userId)
+                ->where('id', $id)
+                ->first();
+            $question_type = $word -> question_type;
+        } else {
+            $userLoop = $user->loop;
+            $word = English::where('user_id', $userId)
+                ->where('loop', $userLoop)
+                ->inRandomOrder() // ランダムな順序に並び替え
+                ->first();
+            GeminiHelper::gemini($id);
+            OpenAiHelper::openai($id);
+        }
+
         $userLoop = $user->loop;
         if (!English::where('user_id', $userId)->first()) {
             $question_type = 'noWord';
@@ -59,7 +76,7 @@ class EnglishController extends Controller
 
         // 初期設定など
         session(['starttime' => time()]);
-
+        
         if ($question_type == 'normal') {
             // JSONをデコード
             $decodedAnswer = json_decode($word->answer, true);
@@ -79,12 +96,17 @@ class EnglishController extends Controller
             $exampleanswer = GeminiHelper::phpfetchFromGemini("次の文を日本語に翻訳してそれを出力してください。$example");
 
 
+            $openai_j = Session::get("openai_j_$id");
+                $gemini_j = Session::get("gemini_j_$id");
+                $openai_d = Session::get("openai_d_$id");
+                $gemini_d = Session::get("gemini_d_$id");
+
             // セッションに保存
             Session::put('example', $example);
             Session::put('exampleanswer', $exampleanswer);
 
             // ビューへ渡す
-            return view('english/english', compact('word', 'question_type', 'content', 'exampleanswer','count'));
+            return view('english/english', compact('word', 'question_type', 'content', 'exampleanswer', 'count'));
         } else if ($question_type == 'select') {
 
             session(['seed' => time()]);
