@@ -84,7 +84,6 @@ class EnglishController extends Controller
 
         $user->loop = $userLoop;
         $user->save();
-        ApiHelper::openai($word->id);
 
         $question_type = $word->question_type;
 
@@ -106,13 +105,10 @@ class EnglishController extends Controller
                 ->whereDate('nextreview_at', $today)
                 ->count();
 
-            $openai_j = Session::get("openai_j_$id");
-            $gemini_j = Session::get("gemini_j_$id");
-            $openai_d = Session::get("openai_d_$id");
-            $gemini_d = Session::get("gemini_d_$id");
+            
 
             // ビューへ渡す
-            return view('english/english', compact('word', 'question_type',  'openai_j', 'gemini_j', 'openai_d', 'gemini_d', 'count'));
+            return view('english/english', compact('word', 'question_type', 'count','answer'));
         } else if ($question_type == 'select') {
 
             session(['seed' => time()]);

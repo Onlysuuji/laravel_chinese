@@ -48,7 +48,7 @@
     </div>
     <div class="flex flex-col items-center space-y-5">
         <p class="w-full text-2xl bg-gray-100 rounded">AIによる例題の答え</p>
-        <div id="gemini_e_question" class="w-5/6 rounded">{{ $gemini_j }}</div>
+        <div id="gemini_e_question" class="w-5/6 rounded"></div>
         <div x-data="{ open: false }" class="w-5/6 rounded flex flex-col justify-center gap-x-2 items-center">
             <div class="flex gap-x-4">
                 <div name="gemini_e_answer_close" style="cursor: pointer;" @click="open = !open" x-show="open"><i
@@ -65,7 +65,7 @@
                     x-transition:enter-end="opacity-100 transform scale-100"
                     x-transition:leave="transition ease-in duration-200"
                     x-transition:leave-start="opacity-100 transform scale-100"
-                    x-transition:leave-end="opacity-0 transform scale-90">{{ $gemini_e }}</div>
+                    x-transition:leave-end="opacity-0 transform scale-90"></div>
 
             </div>
 
@@ -89,7 +89,7 @@
         </div>
 
 
-        <div id="openai_e_question" class="w-5/6 rounded">{{ $openai_j }}</div>
+        <div id="openai_e_question" class="w-5/6 rounded"></div>
         <div x-data="{ open: false }" class="w-5/6 rounded flex flex-col justify-center gap-x-2 items-center">
             <div class="flex gap-x-4">
                 <div name="openai_e_answer_close" style="cursor: pointer;" @click="open = !open" x-show="open"><i
@@ -106,7 +106,7 @@
                     x-transition:enter-end="opacity-100 transform scale-100"
                     x-transition:leave="transition ease-in duration-200"
                     x-transition:leave-start="opacity-100 transform scale-100"
-                    x-transition:leave-end="opacity-0 transform scale-90">{{ $openai_e }}</div>
+                    x-transition:leave-end="opacity-0 transform scale-90"></div>
 
             </div>
 
@@ -220,6 +220,12 @@
         utterance.lang = 'en-US';
         window.speechSynthesis.speak(utterance);
     }
+
+    $('#gemini_e_question').text(sessionStorage.getItem('gemini_japanese'));
+    $('#openai_e_question').text(sessionStorage.getItem('openai_japanese'));
+    $('#gemini_e_answer').text(sessionStorage.getItem('gemini_example'));
+    $('#openai_e_answer').text(sessionStorage.getItem('openai_example'));
+
 </script>
 <script>
     async function callGemini(prompt) {
@@ -274,25 +280,46 @@
         }
     }
 
+
+
     // 並列処理の実装
     (async () => {
         try {
+            const gemini_japanese = sessionStorage.getItem('gemini_japanese');
+            const gemini_english = sessionStorage.getItem('gemini_english');
+            const openai_japanese = sessionStorage.getItem('openai_japanese');
+            const openai_english = sessionStorage.getItem('openai_english');
+
+            const answer_to_gemini = "{{ $answer_to_gemini }}";
+            const answer_to_openai = "{{ $answer_to_openai }}";
+            let gemini_comment = '';
+            if (answer_to_gemini) {
+                gemini_comment = `「${answer_to_gemini}」は「${gemini_japanese}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。`;
+            } else {
+                gemini_comment = `「${gemini_english}」という英文の文構造を日本語で解説してください。`;
+            }
+
+            let openai_comment = '';
+            if(answer_to_openai){
+                openai_comment = `「${answer_to_openai}」は「${openai_japanese}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。`;
+            }else{
+                openai_comment = `「${openai_english}」という英文の文構造を日本語で解説してください。`;
+            }
+
+
             // GeminiとOpenAIの並列実行
-            const [gemini_comment, gemini_content, openai_comment, openai_content] = await Promise.all([
-                callGemini(@json($gemini_comment)), // Geminiコメント
+            const [generated_gemini_comment, generated_gemini_content, generated_openai_comment, generated_openai_content] = await Promise.all([
+                callGemini(gemini_comment), // Geminiコメント
                 callGemini(@json($content)), // Geminiコンテンツ
-                callOpenai(@json($openai_comment)), // OpenAIコメント
+                callOpenai(openai_comment), // OpenAIコメント
                 callOpenai(@json($content)) // OpenAIコンテンツ
             ]);
 
-            console.log(@json($gemini_e));
-            console.log(@json($openai_e));
-
             // **で囲まれた部分を <strong>タグに置き換え
-            const processedGeminiContent = gemini_content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            const processedGeminiComment = gemini_comment.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            const processedOpenaiContent = openai_content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            const processedOpenaiComment = openai_comment.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const processedGeminiContent = generated_gemini_content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const processedGeminiComment = generated_gemini_comment.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const processedOpenaiContent = generated_openai_content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const processedOpenaiComment = generated_openai_comment.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 
             // 置き換えたテキストをHTMLとして挿入
             $('#gemini_content').html(processedGeminiContent);
