@@ -36,7 +36,7 @@ app.get("/api/openai", async (req, res) => {
   try {
     // OpenAI APIリクエスト
     const response = await client.chat.completions.create({
-      model: "gpt-4o-mini", // モデル名
+      model: "gpt-4o", // モデル名
       messages: messages // メッセージ配列を渡す
     });
     // content部分だけを抽出

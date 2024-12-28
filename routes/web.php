@@ -2,6 +2,7 @@
 
 use App\Helpers\GeminiHelper;
 use App\Helpers\OpenAiHelper;
+use App\Helpers\ApiHelper;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ChineseController;
@@ -41,7 +42,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::post('/call-gemini', [GeminiHelper::class, 'fetchFromGemini'])->name('gemini');
-Route::post('/call-openai/{param}', [OpenAiHelper::class, 'fetchFromOpenAi'])->name('openai');
+Route::post('/call-openai', [OpenAiHelper::class, 'fetchFromOpenAi'])->name('openai');
+Route::get('/call-api', [ApiHelper::class, 'sessionApi'])->name('api');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

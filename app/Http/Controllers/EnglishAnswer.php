@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use App\Helpers\GeminiHelper;
 use Illuminate\Support\Facades\Log;
+use App\Models\User;
+use App\Helpers\ApiHelper;
 
 class EnglishAnswer extends Controller
 {
@@ -65,7 +67,8 @@ class EnglishAnswer extends Controller
                 $word->save();
                 $id = $word->id;
 
-                Session::put('answer_to_ai', $request->input('answer_to_ai', NULL));
+                Session::put('answer_to_gemini', $request->input('answer_to_gemini', NULL));
+                Session::put('answer_to_openai', $request->input('answer_to_openai', NULL));
 
                 return redirect()->route('english.showanswer', compact('id', 'yourenglish', 'isCorrect'));
             } else if ($question_type == 'select') {
@@ -122,6 +125,12 @@ class EnglishAnswer extends Controller
 
     public function showAnswer(Request $request)
     {
+        // 現在の時刻に基づいて単語を取得
+        $userId = Auth::id();
+        $user = User::find($userId); // ユーザー情報を取得
+        $userLoop = $user->loop;
+
+        
 
 
         $request->session()->put('previous_url', $request->fullUrl());
@@ -134,10 +143,6 @@ class EnglishAnswer extends Controller
 
         $yourenglish = $request->query('yourenglish');
         $answerData = json_decode($word->answer, true);
-
-
-
-
 
         // レコードが見つからなかった場合の処理
         if (!$word) {
@@ -159,17 +164,25 @@ class EnglishAnswer extends Controller
 
         if ($word->question_type == 'normal') {
             // セッションからデータを取得
-            $example = Session::get('example');
-            $exampleanswer = Session::get('exampleanswer');
-            $answer_to_ai = Session::get('answer_to_ai');
-            if ($answer_to_ai) {
-                $ai_example = "「{$answer_to_ai}」は「{$exampleanswer}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。";
+            $openai_j = Session::get('openai_j_' . $id);
+            $gemini_j = Session::get('gemini_j_' . $id);
+            $openai_e = Session::get('openai_e_' . $id);
+            $gemini_e = Session::get('gemini_e_' . $id);
+            $answer_to_gemini = Session::get('answer_to_gemini');
+            $answer_to_openai = Session::get('answer_to_openai');
+            if ($answer_to_gemini) {
+                $gemini_comment = "「{$answer_to_gemini}」は「{$gemini_j}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。";
             } else {
-                $ai_example = "「{$exampleanswer}」という英文の文構造を日本語で解説してください。";
+                $gemini_comment = "「{$gemini_e}」という英文の文構造を日本語で解説してください。";
+            }
+            if ($answer_to_openai) {
+                $openai_comment = "「{$answer_to_openai}」は「{$openai_j}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。";
+            } else {
+                $openai_comment = "「{$openai_e}」という英文の文構造を日本語で解説してください。";
             }
 
             $yourenglish = $request->query('yourenglish', NULL); // デフォルト値を'N/A'に設定
-            return view('english.answer', compact('id', 'word', 'yourenglish', 'isCorrect', 'content', 'example', 'exampleanswer', 'ai_example'));
+            return view('english.answer', compact('id', 'word', 'yourenglish', 'isCorrect', 'content', 'openai_j', 'gemini_j', 'openai_e', 'gemini_e', 'openai_comment', 'gemini_comment'));
         } elseif ($word->question_type == 'select') {
             $your_answer = $request->query('your_answer', NULL);
             $choices = json_decode($word->choices, true);
