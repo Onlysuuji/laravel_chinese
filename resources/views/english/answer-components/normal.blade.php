@@ -13,7 +13,7 @@
         <div id="solution_containers" class="w-5/6 rounded"></div>
         <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-28 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-14 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>Geminiによる解説を表示</div>
             </button>
@@ -30,7 +30,7 @@
         </div>
         <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-28 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-14 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>Openaiによる解説を表示</div>
             </button>
@@ -72,7 +72,7 @@
         </div>
         <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-28 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-14 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>Geminiの例題の解説を表示</div>
             </button>
@@ -113,7 +113,7 @@
         </div>
         <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-28 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-14 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>Openaiの例題の 解説を表示</div>
             </button>
@@ -137,6 +137,12 @@
         <p class="w-full text-2xl bg-gray-100 rounded my-2">解説</p>
         <div id="userAnswer" class="w-5/6 rounded text-xl my-3">{{ $word->comment }}</div>
     </div>
+@endif
+@if($isCorrect==True)
+<div class="flex justify-center items-center gap-x-5 pt-5">
+    <input id="isCorrect" type="checkbox">
+    <p>正解にしたい場合ここにチェック</p>
+</div>
 @endif
 <div class="flex items-center justify-around px-5 pt-5">
     <a href="{{ route('english') }}" class=" p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
@@ -286,12 +292,12 @@
     (async () => {
         try {
             const gemini_japanese = sessionStorage.getItem('gemini_japanese');
-            const gemini_english = sessionStorage.getItem('gemini_english');
+            const gemini_english = sessionStorage.getItem('gemini_example');
             const openai_japanese = sessionStorage.getItem('openai_japanese');
-            const openai_english = sessionStorage.getItem('openai_english');
+            const openai_english = sessionStorage.getItem('openai_example');
 
-            const answer_to_gemini = "{{ $answer_to_gemini }}";
-            const answer_to_openai = "{{ $answer_to_openai }}";
+            const answer_to_gemini = @json($answer_to_gemini);
+            const answer_to_openai = @json($answer_to_openai);
             let gemini_comment = '';
             if (answer_to_gemini) {
                 gemini_comment = `「${answer_to_gemini}」は「${gemini_japanese}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。`;

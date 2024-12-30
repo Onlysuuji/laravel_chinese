@@ -6,7 +6,7 @@
 
         <input type="hidden" name="id" value="{{ $word->id }}">
 
-        <div class="text-center px-20 py-2 text-2xl space-y-6">
+        <div class="text-center px-16- py-2 text-2xl space-y-3">
             <p class="text-3xl ">
                 @if (isset($count) && $count > 0)
                     {{ $count }}個学習した
@@ -35,7 +35,7 @@
                 name="answer_to_openai" autocorrect="off" placeholder="AIの問題への回答（openai）" inputmode="latin"
                 autocapitalize="off" spellcheck="false" autocomplete="off" />
             <button type="submit" id="goToAnswer" name="goToAnswer"
-                class=" w-24 py-2 font-medium text-lg bg-green-200 text-green-500 rounded" disabled>答え</button>
+                class=" w-24 py-2 font-medium text-lg bg-green-200 text-green-500 rounded" disabled>準備中</button>
 
         </div>
 
@@ -112,7 +112,7 @@
         // 並列処理の実装
         (async () => {
             try {
-                const englishWord = "{{ $answer }}";
+                const englishWord = @json($answer);
 
                 const description = `指定された英単語に適した説明を、その英単語の文字を含めないように日本語で作成してください：${englishWord}`;
                 const example = `指定された英単語を使用する英文を作ってその文だけを出力してください：${englishWord}`;
@@ -152,6 +152,7 @@
                 $('#openai_description').html(processedOpenaiDescription);
                 $('#openai_japanese').html(processedOpenaiJapanese);
 
+                $('#goToAnswer').text('答え');
                 $('#goToAnswer').prop('disabled', false); // 答えるボタンを有効化
 
             } catch (error) {
