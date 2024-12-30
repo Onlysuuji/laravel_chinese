@@ -301,7 +301,7 @@
 
             let openai_comment = '';
             if(answer_to_openai){
-                openai_comment = `「${answer_to_openai}」は「${openai_japanese}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。`;
+                openai_comment = `「${answer_to_openai}」は「${openai_japanese}」の英訳となっていますか？間違っていたら修正し、修正した文を提示してください。`;
             }else{
                 openai_comment = `「${openai_english}」という英文の文構造を日本語で解説してください。`;
             }
