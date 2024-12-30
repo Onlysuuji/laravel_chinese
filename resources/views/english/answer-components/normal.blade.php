@@ -138,11 +138,11 @@
         <div id="userAnswer" class="w-5/6 rounded text-xl my-3">{{ $word->comment }}</div>
     </div>
 @endif
-@if($isCorrect==True)
-<div class="flex justify-center items-center gap-x-5 pt-5">
-    <input id="isCorrect" type="checkbox">
-    <p>正解にしたい場合ここにチェック</p>
-</div>
+@if ($isCorrect == true)
+    <div class="flex justify-center items-center gap-x-5 pt-5">
+        <input id="isCorrect" type="checkbox">
+        <p>正解にしたい場合ここにチェック</p>
+    </div>
 @endif
 <div class="flex items-center justify-around px-5 pt-5">
     <a href="{{ route('english') }}" class=" p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
@@ -184,6 +184,10 @@
             $('#next-word')[0].click();
         }
     });
+
+    $('#isCorrect').on("change", function() {
+
+    })
 </script>
 
 
@@ -231,7 +235,6 @@
     $('#openai_e_question').text(sessionStorage.getItem('openai_japanese'));
     $('#gemini_e_answer').text(sessionStorage.getItem('gemini_example'));
     $('#openai_e_answer').text(sessionStorage.getItem('openai_example'));
-
 </script>
 <script>
     async function callGemini(prompt) {
@@ -300,21 +303,25 @@
             const answer_to_openai = @json($answer_to_openai);
             let gemini_comment = '';
             if (answer_to_gemini) {
-                gemini_comment = `「${answer_to_gemini}」は「${gemini_japanese}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。`;
+                gemini_comment =
+                    `「${answer_to_gemini}」は「${gemini_japanese}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。`;
             } else {
                 gemini_comment = `「${gemini_english}」という英文の文構造を日本語で解説してください。`;
             }
 
             let openai_comment = '';
-            if(answer_to_openai){
-                openai_comment = `「${answer_to_openai}」は「${openai_japanese}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。`;
-            }else{
+            if (answer_to_openai) {
+                openai_comment =
+                    `「${answer_to_openai}」は「${openai_japanese}」の英訳となっていますか？間違っていたら修正し、日本語で解説してください。`;
+            } else {
                 openai_comment = `「${openai_english}」という英文の文構造を日本語で解説してください。`;
             }
 
 
             // GeminiとOpenAIの並列実行
-            const [generated_gemini_comment, generated_gemini_content, generated_openai_comment, generated_openai_content] = await Promise.all([
+            const [generated_gemini_comment, generated_gemini_content, generated_openai_comment,
+                generated_openai_content
+            ] = await Promise.all([
                 callGemini(gemini_comment), // Geminiコメント
                 callGemini(@json($content)), // Geminiコンテンツ
                 callOpenai(openai_comment), // OpenAIコメント
@@ -322,10 +329,14 @@
             ]);
 
             // **で囲まれた部分を <strong>タグに置き換え
-            const processedGeminiContent = generated_gemini_content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            const processedGeminiComment = generated_gemini_comment.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            const processedOpenaiContent = generated_openai_content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-            const processedOpenaiComment = generated_openai_comment.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            const processedGeminiContent = generated_gemini_content.replace(/\*\*(.*?)\*\*/g,
+                '<strong>$1</strong>');
+            const processedGeminiComment = generated_gemini_comment.replace(/\*\*(.*?)\*\*/g,
+                '<strong>$1</strong>');
+            const processedOpenaiContent = generated_openai_content.replace(/\*\*(.*?)\*\*/g,
+                '<strong>$1</strong>');
+            const processedOpenaiComment = generated_openai_comment.replace(/\*\*(.*?)\*\*/g,
+                '<strong>$1</strong>');
 
             // 置き換えたテキストをHTMLとして挿入
             $('#gemini_content').html(processedGeminiContent);
