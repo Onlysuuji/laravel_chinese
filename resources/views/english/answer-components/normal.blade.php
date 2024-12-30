@@ -13,7 +13,7 @@
         <div id="solution_containers" class="w-5/6 rounded"></div>
         <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-14 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-24 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>Geminiによる解説を表示</div>
             </button>
@@ -30,7 +30,7 @@
         </div>
         <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-14 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-24 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>Openaiによる解説を表示</div>
             </button>
@@ -49,8 +49,12 @@
     <div class="flex flex-col items-center space-y-5">
         <p class="w-full text-2xl bg-gray-100 rounded">AIによる例題の答え</p>
         <div id="gemini_e_question" class="w-5/6 rounded"></div>
+        @if ($answer_to_gemini)
+            <div id="answer_to_gemini">{{$answer_to_gemini}}</div>
+        @endif
         <div x-data="{ open: false }" class="w-5/6 rounded flex flex-col justify-center gap-x-2 items-center">
             <div class="flex gap-x-4">
+                <div class="pr-10">答え:</div>
                 <div name="gemini_e_answer_close" style="cursor: pointer;" @click="open = !open" x-show="open"><i
                         class="fa-solid fa-minus"></i></div>
                 <div name="gemini_e_answer_open" style="cursor: pointer;" @click="open = !open" x-show="!open"><i
@@ -72,7 +76,7 @@
         </div>
         <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-14 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-24 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
                 <div>Geminiの例題の解説を表示</div>
             </button>
@@ -90,8 +94,13 @@
 
 
         <div id="openai_e_question" class="w-5/6 rounded"></div>
+        @if ($answer_to_openai)
+            <div id="answer_to_openai">{{$answer_to_openai}}</div>
+        @endif
         <div x-data="{ open: false }" class="w-5/6 rounded flex flex-col justify-center gap-x-2 items-center">
             <div class="flex gap-x-4">
+                <div class="pr-10">答え:</div>
+
                 <div name="openai_e_answer_close" style="cursor: pointer;" @click="open = !open" x-show="open"><i
                         class="fa-solid fa-minus"></i></div>
                 <div name="openai_e_answer_open" style="cursor: pointer;" @click="open = !open" x-show="!open"><i
@@ -113,9 +122,9 @@
         </div>
         <div x-data="{ open: false }" class="w-5/6">
             <button @click="open = !open"
-                class="bg-blue-50 w-full py-1 rounded shadow px-14 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
+                class="bg-blue-50 w-full py-1 rounded shadow px-24 hover:bg-blue-100 transition duration-100 flex justify-between items-center">
                 <i class="fa fa-plus" aria-hidden="true"></i>
-                <div>Openaiの例題の 解説を表示</div>
+                <div>Openaiの例題の解説を表示</div>
             </button>
             <div x-show="open" x-transition:enter="transition ease-out duration-400"
                 x-transition:enter-start="opacity-0 transform scale-90"
@@ -138,23 +147,31 @@
         <div id="userAnswer" class="w-5/6 rounded text-xl my-3">{{ $word->comment }}</div>
     </div>
 @endif
-@if ($isCorrect == true)
-    <div class="flex justify-center items-center gap-x-5 pt-5">
-        <input id="isCorrect" type="checkbox">
-        <p>正解にしたい場合ここにチェック</p>
+<div x-data="{ changeChecked: false }" class="flex flex-col">
+    @if ($isCorrect == false)
+        <div class="flex justify-center items-center gap-x-5 pt-5">
+            <input id="changeCorrect" type="checkbox" x-model="changeChecked">
+            <p>正解にしたい場合ここにチェック</p>
+        </div>
+    @endif
+    <div class="flex items-center justify-around px-5 pt-5">
+        @if ($isCorrect == true)
+            <a href="{{ route('english') }}" class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
+                type="submit" id="next">次の単語</a>
+        @endif
+        @if ($isCorrect == false)
+            <form action="{{ route('english.correct', ['id' => $id]) }}" method="POST">
+                @csrf
+                @method('PATCH')
+                <input type="text" name="changeCorrect" x-model="changeChecked" hidden>
+                <button type="submit"
+                    class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded">次の単語</button>
+            </form>
+        @endif
+        <a href="{{ route('english.modify', ['id' => $id]) }}"
+            class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded" type="submit">編集する</a>
     </div>
-@endif
-<div class="flex items-center justify-around px-5 pt-5">
-    <a href="{{ route('english') }}" class=" p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded"
-        type="submit" id="next" disabled>次の単語</a>
-    <form action="{{ route('english.correct', ['id' => $id]) }}" method="POST">
-        @csrf
-        @method('PATCH')
-        <button type="submit"
-            class="p-3 flex items-center bg-blue-50 hover:bg-blue-100 text-gray-600  duration-100 rounded">正解にする</button>
-    </form>
-    <a href="{{ route('english.modify', ['id' => $id]) }}"
-        class="p-3 flex items-center bg-orange-50 hover:bg-orange-100 rounded" type="submit">編集する</a>
+
 </div>
 <div class="flex items-center justify-around px-5 pt-5">
     <form action="{{ route('english.remember', $word->id) }}" method="POST">

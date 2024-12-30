@@ -11,6 +11,7 @@ use App\Helpers\GeminiHelper;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Helpers\ApiHelper;
+use Faker\Core\Number;
 
 class EnglishAnswer extends Controller
 {
@@ -164,8 +165,8 @@ class EnglishAnswer extends Controller
 
         if ($word->question_type == 'normal') {
             // セッションからデータを取得
-            $answer_to_gemini = Session::get('answer_to_gemini');
-            $answer_to_openai = Session::get('answer_to_openai');
+            $answer_to_gemini = Session::get('answer_to_gemini') ?? NULL;
+            $answer_to_openai = Session::get('answer_to_openai') ?? NULL;
 
             $yourenglish = $request->query('yourenglish', NULL); // デフォルト値を'N/A'に設定
             return view('english.answer', compact('id', 'word', 'yourenglish', 'isCorrect', 'content', 'answer_to_gemini', 'answer_to_openai'));
