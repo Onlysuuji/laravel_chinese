@@ -11,15 +11,18 @@ for (let i = 2; i <= 935; i++) {
         let englishText = englishElement.innerText.trim();
         let japaneseText = japaneseElement.innerText.trim();
 
+        // 英語テキストをスペースで分割して配列にする
+        let englishArray = englishText.split(' ').map(word => word.trim()).filter(word => word.length > 0);
+
         // PHP配列形式の文字列を生成
-        output += `[
-            'user_id' => 1,
+        output += `[  
+            'user_id' => $this->userId,
             'question' => '${japaneseText}',
             'question_type' => 'normal',
             'answer' => json_encode([
-                'english' => ['${englishText}']
-            ]),
-        ],\n`;
+                'english' => ${JSON.stringify(englishArray).replace(/"/g, "'")} 
+            ]),  
+        ],\n`
     }
 }
 

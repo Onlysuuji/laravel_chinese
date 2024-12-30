@@ -103,6 +103,7 @@ class EnglishController extends Controller
             // 今日の日付と一致するレコードを取得してカウント
             $count = English::where('user_id', $userId)
                 ->whereDate('nextreview_at', $today)
+                ->whereColumn('created_at', '!=', 'updated_at')
                 ->count();
 
             

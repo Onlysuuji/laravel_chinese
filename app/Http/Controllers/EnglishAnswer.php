@@ -32,10 +32,10 @@ class EnglishAnswer extends Controller
                 $yourenglish = $request->input('yourenglish', NULL);  // NULLをデフォルト値として設定
 
                 $isCorrect = false;
-                $answer = json_decode($word->answer, true);
+                $answer = json_decode($word->answer, true)['english'];
                 if (!empty($yourenglish)) {
-                    for ($i = 0; $i < count($answer['english']); $i++) {
-                        if (strcasecmp($answer['english'][$i], $yourenglish) === 0) {
+                    for ($i = 0; $i < count($answer); $i++) {
+                        if (strcasecmp($answer[$i], $yourenglish) === 0) {
                             $isCorrect = true;
                             break;
                         }
