@@ -233,8 +233,12 @@
         let gemini_e_answer_text = document.getElementById('gemini_e_answer');
         let gemini_e_answer_sound = document.getElementById('gemini_e_answer_sound');
         gemini_e_answer_sound.addEventListener('click', function() {
-            console.log("a");
             speakText(gemini_e_answer_text);
+        });
+        let openai_e_answer_text = document.getElementById('openai_e_answer');
+        let openai_e_answer_sound = document.getElementById('openai_e_answer_sound');
+        openai_e_answer_sound.addEventListener('click', function() {
+            speakText(openai_e_answer_text);
         });
 
     }

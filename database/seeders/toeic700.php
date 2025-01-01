@@ -1589,7 +1589,7 @@ class toeic700 extends Seeder
                 'question' => '必要な',
                 'question_type' => 'normal',
                 'answer' => json_encode([
-                    'english' => ['necessary．']
+                    'english' => ['necessary']
                 ]),
             ],
             [
